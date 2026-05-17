@@ -8,8 +8,28 @@
 <meta name="theme-color" content="#020617">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-body{margin:0;background:#020617;color:white;font-family:Arial,sans-serif;padding:20px;display:flex;justify-content:center}
-.app{width:100%;max-width:430px}
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  min-height:100%;
+  background:#020617;
+  color:white;
+  font-family:Arial,sans-serif;
+  overflow-x:hidden;
+}
+
+body{
+  display:block;
+}
+
+.app{
+  width:100%;
+  max-width:430px;
+  min-height:100vh;
+  margin:0 auto;
+  padding:20px;
+}
 .card{background:#0f172a;border-radius:20px;padding:20px;margin-bottom:15px}
 button{width:100%;padding:16px;border:none;border-radius:14px;background:#2563eb;color:white;font-size:16px;font-weight:bold;margin-top:10px}
 input,select{width:100%;padding:14px;border-radius:14px;border:none;background:#1e293b;color:white;margin-top:10px}
