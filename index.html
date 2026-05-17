@@ -26,7 +26,7 @@
 <nav class="bottom-nav" id="bottomNav"><button id="navHome" onclick="goRoleHome()">홈</button><button id="navJobs" onclick="navPrimary()">일자리</button><button id="navQR" onclick="showQR(role || lastRole || 'worker')">QR</button><button id="navPay" onclick="navSecondary()">급여</button></nav>
 <script>
 const SUPABASE_URL="https://lbvfluzblblfixhgjijp.supabase.co";
-const SUPABASE_KEY="sb_publishable_e_BXS4xTR5G50v-vq23lCg_ZlSqxbvM";
+const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxidmZsdXpibGJsZml4aGdqdWpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwMzE3NTEsImV4cCI6MjA5NDYwNzc1MX0.XxNTXm-FTXadm0PlEID3lFilfGHnvu-6vXrP_A9gqJQ";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const languages=["한국어","English","Монгол","Tiếng Việt","ไทย","中文","Русский","नेपाली","Oʻzbek"];
 let role=localStorage.getItem("crew_role")||null,lastRole=role,currentScreen="languageScreen",jobs=[],applications=[],attendance=[];
