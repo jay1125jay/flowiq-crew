@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FlowIQ Crew MVP</title>
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#020617">
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #020617; color: white; }
@@ -93,5 +95,10 @@
     function resetData(){if(!confirm("테스트 데이터를 초기화할까요? 생성한 공고, 지원, 출근 기록이 삭제됩니다."))return;localStorage.removeItem("crew_jobs");localStorage.removeItem("crew_workers");localStorage.removeItem("crew_applications");localStorage.removeItem("crew_attendance");jobs=defaultJobs;workers=defaultWorkers;applications=[];attendance=[];saveAll();alert("초기화 완료");goRoleHome()}
     window.onpopstate=function(event){const id=event.state&&event.state.screen?event.state.screen:location.hash.replace("#","");if(screens.includes(id))show(id,false)};init();
   </script>
+  <script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js');
+}
+</script>
 </body>
 </html>
