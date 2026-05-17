@@ -22,13 +22,11 @@ input,select{width:100%;padding:14px;border-radius:14px;border:none;background:#
 <div class="title">FlowIQ Crew</div>
 <div class="sub">실시간 일용직 플랫폼</div>
 </div>
-
 <div class="card">
 <div class="title">공고 생성</div>
 <input id="title" placeholder="공고명">
 <input id="location" placeholder="위치">
 <input id="salary" placeholder="일급">
-
 <label style="display:block;margin-top:15px">지원 언어</label>
 <select id="fLang">
 <option value="한국어">한국어</option>
@@ -41,20 +39,16 @@ input,select{width:100%;padding:14px;border-radius:14px;border:none;background:#
 <option value="한국어 / नेपाली">네팔어</option>
 <option value="한국어 / Oʻzbek">우즈베크어</option>
 </select>
-
 <button onclick="createJob()">공고 저장</button>
 </div>
-
 <div class="card">
 <div class="title">공고 목록</div>
 <div id="jobs"></div>
 </div>
-
 <script>
 const SUPABASE_URL="https://zhbzphvqiiijfjqnktlo.supabase.co";
 const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoYnpwaHZxaWlpamZqcW5rdGxvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwNDEwNTcsImV4cCI6MjA5NDYxNzA1N30.ufIPHJh2fzRLm5taos3yTz6pGlEHFKaSoYI2Ref3T5I";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
 async function loadJobs(){
 const {data}=await db.from('jobs').select('*').order('created_at',{ascending:false});
 const el=document.getElementById('jobs');
@@ -66,15 +60,12 @@ div.innerHTML=`<b>${job.title}</b><br>📍 ${job.location}<br>💰 ${job.salary}
 el.appendChild(div);
 });
 }
-
 async function createJob(){
 const title=document.getElementById('title').value;
 const location=document.getElementById('location').value;
 const salary=document.getElementById('salary').value;
 const language=document.getElementById('fLang').value;
-
 if(!title||!location||!salary){alert('입력하세요');return;}
-
 await db.from('jobs').insert({
 title:title,
 location:location,
@@ -85,15 +76,12 @@ applied:0,
 language:language,
 type:'기타'
 });
-
 alert('저장 완료');
 loadJobs();
 }
-
 if('serviceWorker' in navigator){
 navigator.serviceWorker.register('./service-worker.js');
 }
-
 loadJobs();
 </script>
 </body>
