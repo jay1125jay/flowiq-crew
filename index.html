@@ -93,7 +93,22 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   <button class="big blue" onclick="selectRole('worker')">👷 근로자 앱</button>
   <button class="big green" onclick="selectRole('manager')">🏗️ 관리자 앱</button>
 </section>
+<section id="workerInfoScreen" class="hidden">
+  <div class="card notice">
+    <div class="title">근로자 정보</div>
+    <div class="sub">이름과 연락처를 입력하세요.</div>
+  </div>
 
+  <div class="card">
+    <label>이름</label>
+    <input id="workerNameInput" placeholder="예: 바타르">
+
+    <label>연락처</label>
+    <input id="workerPhoneInput" placeholder="예: 010-1234-5678">
+
+    <button class="full blue" onclick="saveWorkerInfo()">저장 후 시작</button>
+  </div>
+</section>
 <section id="workerScreen" class="hidden">
   <div class="card">
     <div class="job-head">
