@@ -26,7 +26,6 @@
 <nav class="bottom-nav" id="bottomNav"><button id="navHome" onclick="goRoleHome()">홈</button><button id="navJobs" onclick="navPrimary()">일자리</button><button id="navQR" onclick="showQR(role || lastRole || 'worker')">QR</button><button id="navPay" onclick="navSecondary()">급여</button></nav>
 <script>
 const SUPABASE_URL="https://zhbzphvqiiijfjqnktlo.supabase.co";
-
 const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoYnpwaHZxaWlpamZqcW5rdGxvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwNDEwNTcsImV4cCI6MjA5NDYxNzA1N30.ufIPHJh2fzRLm5taos3yTz6pGlEHFKaSoYI2Ref3T5I";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const languages=["한국어","English","Монгол","Tiếng Việt","ไทย","中文","Русский","नेपाली","Oʻzbek"];
