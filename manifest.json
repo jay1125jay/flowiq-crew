@@ -1,0 +1,16 @@
+{
+  "name": "FlowIQ Crew",
+  "short_name": "Crew",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "description": "FlowIQ Crew - Multi-language workforce platform",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

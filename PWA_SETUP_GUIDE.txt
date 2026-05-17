@@ -1,0 +1,36 @@
+# FlowIQ Crew PWA 적용 방법
+
+## 1. GitHub 저장소 열기
+flowiq-crew 저장소 접속
+
+## 2. Add file → Upload files
+
+아래 2개 파일 업로드:
+- manifest.json
+- service-worker.js
+
+## 3. index.html 수정
+
+<head> 바로 아래에 추가:
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#020617">
+
+## 4. </body> 바로 위에 추가:
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js');
+}
+</script>
+
+## 5. Commit changes
+
+GitHub 저장 후 약 10~20초 기다리면
+Vercel이 자동 재배포합니다.
+
+## 완료 후
+휴대폰에서:
+- Safari / Chrome 접속
+- 홈 화면에 추가
+- 앱처럼 실행 가능
