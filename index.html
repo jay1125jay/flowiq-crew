@@ -214,6 +214,8 @@ const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const languages=["한국어","English","Монгол","Tiếng Việt","ไทย","中文","Русский","नेपाली","Oʻzbek"];
 let role=localStorage.getItem("crew_role")||null;
+let workerName=localStorage.getItem("worker_name")||"";
+let workerPhone=localStorage.getItem("worker_phone")||"";
 let lastRole=role;
 let currentScreen="languageScreen";
 let jobs=[];
