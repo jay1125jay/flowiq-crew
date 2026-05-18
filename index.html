@@ -695,27 +695,35 @@ async function deleteJob(jobId){
 }
 
 function renderManager(){
+  function renderManager(){
   if(!document.getElementById("mChecked"))return;
 
-  document.getElementById("mChecked").innerText=attendance.length;
-  document.getElementById("mApplied").innerText=applications.length;
-  document.getElementById("mJobs").innerText=jobs.length;
-  if(role==="manager"){
-  document.getElementById("managerTitle").innerText=
-    COMPANY_NAMES[companyId] || companyId;
-}else{
-  document.getElementById("managerTitle").innerText=
-    "FlowIQ MASTER";
-}
-const filteredApplications =
-  role==="manager"
-    ? applications.filter(a=>a.company_id===companyId)
-    : applications;
+  const filteredJobs =
+    role==="manager"
+      ? jobs.filter(j=>j.company_id===companyId)
+      : jobs;
 
-const filteredAttendance =
-  role==="manager"
-    ? attendance.filter(a=>a.company_id===companyId)
-    : attendance;
+  const filteredApplications =
+    role==="manager"
+      ? applications.filter(a=>a.company_id===companyId)
+      : applications;
+
+  const filteredAttendance =
+    role==="manager"
+      ? attendance.filter(a=>a.company_id===companyId)
+      : attendance;
+
+  document.getElementById("mChecked").innerText=filteredAttendance.length;
+  document.getElementById("mApplied").innerText=filteredApplications.length;
+  document.getElementById("mJobs").innerText=filteredJobs.length;
+
+  if(role==="manager"){
+    document.getElementById("managerTitle").innerText=
+      COMPANY_NAMES[companyId] || companyId;
+  }else{
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER";
+  }
+
   const appRows=filteredApplications.map(a=>{
     const job=jobs.find(j=>Number(j.id)===Number(a.job_id));
     return `
@@ -741,7 +749,9 @@ const filteredAttendance =
       </div>
     </div>`).join("");
 
-  document.getElementById("workersList").innerHTML=(attRows+appRows)||`<div class="card"><div class="sub">아직 지원/출근 기록이 없습니다.</div></div>`;
+  document.getElementById("workersList").innerHTML=
+    (attRows+appRows) ||
+    `<div class="card"><div class="sub">아직 지원/출근 기록이 없습니다.</div></div>`;
 }
   async function createJob(){
   const title=fTitle.value.trim();
