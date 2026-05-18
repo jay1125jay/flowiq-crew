@@ -756,8 +756,8 @@ async function deleteJob(jobId){
         </div>
 
         <div style="display:flex;flex-direction:column;gap:8px">
-          <button class="blue" onclick="approveApplication('${a.id}')">승인</button>
-          <button class="red" onclick="rejectApplication('${a.id}')">거절</button>
+          <button class="blue" onclick="approveApplication(${JSON.stringify(a.id)})">승인</button>
+          <button class="red" onclick="rejectApplication(${JSON.stringify(a.id)})">거절</button>
         </div>
       </div>
     </div>`;
@@ -1124,35 +1124,46 @@ if(window.caches){
 }
 
 async function approveApplication(id){
+  if(!id){
+    alert("승인할 지원 기록 ID가 없습니다. 새로고침 후 다시 시도하세요.");
+    return;
+  }
+
   const {error}=await db
     .from("applications")
     .update({status:"승인"})
-    .eq("id",id);
+    .eq("id",String(id));
 
   if(error){
-    return alert("승인 오류: "+error.message);
+    alert("승인 오류: "+error.message);
+    return;
   }
 
   await loadData();
-  goScreen("managerScreen");
+  show("managerScreen",false);
   alert("승인 완료");
 }
 
 async function rejectApplication(id){
+  if(!id){
+    alert("거절할 지원 기록 ID가 없습니다. 새로고침 후 다시 시도하세요.");
+    return;
+  }
+
   const {error}=await db
     .from("applications")
     .update({status:"거절"})
-    .eq("id",id);
+    .eq("id",String(id));
 
   if(error){
-    return alert("거절 오류: "+error.message);
+    alert("거절 오류: "+error.message);
+    return;
   }
 
   await loadData();
-  goScreen("managerScreen");
+  show("managerScreen",false);
   alert("거절 완료");
 }
-
 
 init();
 </script>
