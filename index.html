@@ -899,7 +899,15 @@ function renderPayroll(){
 
 async function refreshData(){await loadData();alert("새로고침 완료")}
 function goHome(){goScreen((role==="manager"||role==="master")?"managerScreen":"workerScreen")}
-function goRoleHome(){goScreen("roleScreen")}
+function goRoleHome(){
+  if(role==="manager" || role==="master"){
+    goScreen("managerScreen");
+  }else if(role==="worker"){
+    goScreen("workerScreen");
+  }else{
+    goScreen("roleScreen");
+  }
+}
 function navPrimary(){goScreen("workerScreen")}
 function navSecondary(){
   if(role==="manager" || role==="master"){
