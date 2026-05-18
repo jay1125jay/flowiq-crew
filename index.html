@@ -566,6 +566,13 @@ function saveWorkerInfo(){
   localStorage.setItem("worker_name",name);
   localStorage.setItem("worker_phone",phone);
 
+  const pendingCheckin=localStorage.getItem("pending_checkin");
+  if(pendingCheckin){
+    localStorage.removeItem("pending_checkin");
+    location.href=location.origin+location.pathname+"?checkin="+pendingCheckin;
+    return;
+  }
+
   goScreen("workerScreen");
 }
   async function loadData(){
@@ -855,29 +862,32 @@ async function saveAttendance(job){
       return;
     }
 
-    if(role==="worker" && workerPhone){
-      const myApplication=applications.find(
-        a=>Number(a.job_id)===Number(job.id) && a.phone===workerPhone
-      );
+    if(!workerName || !workerPhone){
+      reject("근로자 정보 등록 후 출근할 수 있습니다.");
+      return;
+    }
 
-      if(!myApplication){
-        reject("지원한 공고만 출근할 수 있습니다.");
-        return;
-      }
+    const myApplication=applications.find(
+      a=>Number(a.job_id)===Number(job.id) && a.phone===workerPhone
+    );
 
-      if((myApplication.status || "지원")!=="승인"){
-        reject("관리자 승인 후 출근할 수 있습니다.");
-        return;
-      }
+    if(!myApplication){
+      reject("지원한 공고만 출근할 수 있습니다.");
+      return;
+    }
 
-      const alreadyCheckedIn=attendance.some(
-        a=>Number(a.job_id)===Number(job.id) && a.phone===workerPhone
-      );
+    if((myApplication.status || "지원")!=="승인"){
+      reject("관리자 승인 후 출근할 수 있습니다.");
+      return;
+    }
 
-      if(alreadyCheckedIn){
-        reject("이미 출근 처리된 공고입니다.");
-        return;
-      }
+    const alreadyCheckedIn=attendance.some(
+      a=>Number(a.job_id)===Number(job.id) && a.phone===workerPhone
+    );
+
+    if(alreadyCheckedIn){
+      reject("이미 출근 처리된 공고입니다.");
+      return;
     }
 
     navigator.geolocation.getCurrentPosition(async position=>{
@@ -948,11 +958,23 @@ async function autoCheckIn(){
   const checkin=params.get("checkin");
 
   if(checkin){
+    role="worker";
+    lastRole="worker";
+    localStorage.setItem("crew_role","worker");
+
+    if(!workerName || !workerPhone){
+      localStorage.setItem("pending_checkin",checkin);
+      alert("근로자 정보 등록 후 출근할 수 있습니다.");
+      goScreen("workerInfoScreen");
+      return;
+    }
+
     await loadData();
     const job=jobs.find(j=>Number(j.id)===Number(checkin));
 
     if(!job){
       alert("공고를 찾을 수 없습니다.");
+      location.href=location.origin+location.pathname;
       return;
     }
 
@@ -962,6 +984,7 @@ async function autoCheckIn(){
       location.href=location.origin+location.pathname;
     }catch(e){
       alert(e);
+      location.href=location.origin+location.pathname;
     }
   }
 }
