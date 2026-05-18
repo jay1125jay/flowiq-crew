@@ -186,7 +186,11 @@ button:active{
   background:rgba(59,130,246,.16);
   color:#93c5fd;
 }
-.notice{background:rgba(37,99,235,.13);border:1px solid rgba(59,130,246,.25)}
+.notice{
+  background:linear-gradient(135deg,rgba(37,99,235,.18),rgba(59,130,246,.08));
+  border:1px solid rgba(96,165,250,.22);
+  box-shadow:0 10px 30px rgba(37,99,235,.12);
+}
 .hidden{display:none}
 .back{width:100%;margin-top:12px;background:#334155}
 input,select{
@@ -212,7 +216,20 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
 .lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 14px}
 .lang-option{display:flex;align-items:center;gap:8px;background:#020617;border:1px solid #334155;border-radius:14px;padding:12px;color:#e2e8f0;font-size:14px;font-weight:700}
 .lang-option input{width:auto;min-height:auto;margin:0}
-.qr-box{width:230px;height:230px;margin:18px auto;background:white;color:#020617;border-radius:28px;display:flex;align-items:center;justify-content:center;font-size:132px}
+.qr-box{
+  width:240px;
+  height:240px;
+  margin:24px auto;
+  background:white;
+  color:#020617;
+  border-radius:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:132px;
+  box-shadow:0 20px 50px rgba(0,0,0,.35);
+  padding:14px;
+}
 .bottom-nav{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);width:calc(100% - 24px);max-width:430px;background:rgba(15,23,42,.94);border:1px solid #1e293b;border-radius:26px;padding:10px;display:none;grid-template-columns:repeat(4,1fr);gap:8px}
 .bottom-nav button{
   min-height:58px;
