@@ -486,7 +486,7 @@ function show(id,push=false){
 
 function goScreen(id){show(id,true)}
 function selectLanguage(language){localStorage.setItem("crew_language",language);goScreen("roleScreen")}
-function selectRole(selected){
+async function selectRole(selected){
   role=selected;
   lastRole=selected;
 
@@ -534,9 +534,14 @@ else{
   }
 
   role="master";
+lastRole="master";
+
 localStorage.setItem("crew_role","master");
-  
-    goScreen("managerScreen");
+
+await loadData();
+
+goScreen("managerScreen");
+alert("MASTER MODE");
     alert("MASTER MODE");
   }
 }
