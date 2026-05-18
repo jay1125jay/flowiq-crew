@@ -108,7 +108,21 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
 .lang-option input{width:auto;min-height:auto;margin:0}
 .qr-box{width:230px;height:230px;margin:18px auto;background:white;color:#020617;border-radius:28px;display:flex;align-items:center;justify-content:center;font-size:132px}
 .bottom-nav{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);width:calc(100% - 24px);max-width:430px;background:rgba(15,23,42,.94);border:1px solid #1e293b;border-radius:26px;padding:10px;display:none;grid-template-columns:repeat(4,1fr);gap:8px}
-.bottom-nav button{min-height:52px;border-radius:18px;font-size:12px;background:#020617;color:#cbd5e1}
+.bottom-nav button{
+  min-height:58px;
+  border-radius:20px;
+  font-size:12px;
+  background:#020617;
+  color:#cbd5e1;
+  font-weight:700;
+  border:1px solid rgba(255,255,255,.04);
+}
+
+.bottom-nav button.active{
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  color:white;
+  box-shadow:0 8px 22px rgba(37,99,235,.38);
+}
 .bottom-nav button.active{background:#2563eb;color:white}
 .top-actions{display:flex;gap:8px;margin-bottom:14px}
 .top-actions button{flex:1;min-height:44px;border-radius:16px;font-size:13px}
