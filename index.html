@@ -744,10 +744,20 @@ async function deleteJob(jobId){
         <div class="info">상태: ${a.status || "지원"}</div>
       </div>
 
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <button class="blue" onclick="approveApplication(${a.id})">승인</button>
-        <button class="red" onclick="rejectApplication(${a.id})">거절</button>
-      </div>
+      ${
+  (a.status || "지원") === "지원"
+  ? `
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button class="blue" onclick="approveApplication(${a.id})">승인</button>
+      <button class="red" onclick="rejectApplication(${a.id})">거절</button>
+    </div>
+  `
+  : `
+    <div class="status ${a.status==="승인" ? "ok" : "wait"}">
+      ${a.status}
+    </div>
+  `
+}
     </div>
   </div>`;
 }).join("");
