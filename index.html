@@ -425,6 +425,7 @@ function renderManager(){
 
   document.getElementById("workersList").innerHTML=(attRows+appRows)||`<div class="card"><div class="sub">아직 지원/출근 기록이 없습니다.</div></div>`;
 }
+  async function createJob(){
   const title=fTitle.value.trim();
   const location=fLocation.value.trim();
   const work_time=fTime.value.trim();
