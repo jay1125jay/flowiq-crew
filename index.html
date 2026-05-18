@@ -239,7 +239,7 @@ let currentScreen="languageScreen";
 let jobs=[];
 let applications=[];
 const MASTER_PASSWORD="1234";
-
+let companyId=localStorage.getItem("company_id")||"demo_company";
 const screens=["languageScreen","roleScreen","workerInfoScreen","workerScreen","managerScreen","jobFormScreen","payrollScreen","qrScreen"];
 
 function won(n){return Number(n||0).toLocaleString("ko-KR")+"원"}
