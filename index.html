@@ -300,7 +300,7 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
 <section id="roleScreen" class="hidden">
   <div class="card notice">
     <div class="title">시작하기</div>
-    <div class="sub">근로자 또는 현장관리자로 접속하세요.</div>
+    <div class="sub">근로자 또는 업체관리자로 접속하세요.</div>
   </div>
   <button class="big blue" onclick="selectRole('worker')">👷 근로자 앱</button>
 
@@ -707,8 +707,16 @@ function renderManager(){
   document.getElementById("managerTitle").innerText=
     "FlowIQ MASTER";
 }
+const filteredApplications =
+  role==="manager"
+    ? applications.filter(a=>a.company_id===companyId)
+    : applications;
 
-  const appRows=applications.map(a=>{
+const filteredAttendance =
+  role==="manager"
+    ? attendance.filter(a=>a.company_id===companyId)
+    : attendance;
+  const appRows=filteredApplications.map(a=>{
     const job=jobs.find(j=>Number(j.id)===Number(a.job_id));
     return `
     <div class="card">
@@ -722,7 +730,7 @@ function renderManager(){
     </div>`;
   }).join("");
 
-  const attRows=attendance.map(a=>`
+  const attRows=filteredAttendance.map(a=>`
     <div class="card">
       <div class="worker-row">
         <div>
