@@ -464,7 +464,15 @@ function renderManager(){
   if(!title||!location||!work_time||!salary||!needed)return alert("공고명, 위치, 시간, 일급, 필요 인원을 입력하세요.");
 
   const {error}=await db.from("jobs").insert({
-    title,location,work_time,salary,needed,applied:0,language,type
+    title,
+location,
+work_time,
+salary,
+needed,
+applied:0,
+language,
+type,
+company_id:companyId
   });
 
   if(error)return alert("공고 저장 오류: "+error.message);
