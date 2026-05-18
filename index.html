@@ -259,7 +259,6 @@ function show(id,push=false){
 function goScreen(id){show(id,true)}
 function selectLanguage(language){localStorage.setItem("crew_language",language);goScreen("roleScreen")}
 function selectRole(selected){
-
   role=selected;
   lastRole=selected;
 
@@ -276,16 +275,7 @@ function selectRole(selected){
   }
 }
 
- function saveWorkerInfo(){
-  const name=document.getElementById("workerNameInput").value.trim();
-  const phone=document.getElementById("workerPhoneInput").value.trim();
-
-  if(!name || !phone){
-    alert("이름과 연락처를 입력하세요.");
-    return;
-  }
-
- function saveWorkerInfo(){
+function saveWorkerInfo(){
   const name=document.getElementById("workerNameInput").value.trim();
   const phone=document.getElementById("workerPhoneInput").value.trim();
 
@@ -301,8 +291,7 @@ function selectRole(selected){
   localStorage.setItem("worker_phone",phone);
 
   goScreen("workerScreen");
-} 
-async function loadData(){
+}
   const jr=await db.from("jobs").select("*").order("created_at",{ascending:false});
   const ar=await db.from("applications").select("*").order("created_at",{ascending:false});
   const tr=await db.from("attendance").select("*").order("created_at",{ascending:false});
@@ -470,7 +459,8 @@ async function saveAttendance(job){
 
       const {error}=await db.from("attendance").insert({
         job_id:job.id,
-        worker_name:"Demo Worker",
+        worker_name:workerName || "이름없음",
+phone:workerPhone || "번호없음",
         job_title:job.title,
         amount:job.salary,
         gps:gps
