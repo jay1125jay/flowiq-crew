@@ -653,9 +653,9 @@ function renderJobs(){
 }
 
 async function applyJob(jobId){
-  if(applications.some(a=>Number(a.job_id)===Number(jobId))){
-    return alert("이미 지원한 공고입니다.");
-  }
+  if(applications.some(a=>a.phone===workerPhone)){
+  return alert("이미 다른 공고에 지원했습니다. 한 번에 하나의 공고만 지원할 수 있습니다.");
+}
 
   const {error}=await db.from("applications").insert({
     job_id:jobId,
