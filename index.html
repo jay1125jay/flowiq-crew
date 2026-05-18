@@ -905,7 +905,13 @@ async function init(){
   await seedJobsIfEmpty();
 
   const savedLanguage=localStorage.getItem("crew_language");
-  if(savedLanguage&&role)show(role==="manager"?"managerScreen":"workerScreen",false);
+  if(savedLanguage&&role){
+  if(role==="manager" || role==="master"){
+    show("managerScreen",false);
+  }else{
+    show("workerScreen",false);
+  }
+}
   else if(savedLanguage)show("roleScreen",false);
   else show("languageScreen",false);
 
