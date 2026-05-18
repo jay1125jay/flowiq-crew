@@ -738,8 +738,12 @@ async function deleteJob(jobId){
         <div>
           <div class="worker-name">${a.worker_name} (${a.phone || "번호없음"})</div>
           <div class="worker-meta">지원 공고: ${job?job.title:'삭제된 공고'} · ${new Date(a.created_at).toLocaleString()}</div>
+          <div class="info">상태: ${a.status || "지원"}</div>
         </div>
-        <div class="status wait">지원</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+  <button class="blue" onclick="approveApplication(${a.id})">승인</button>
+  <button class="red" onclick="rejectApplication(${a.id})">거절</button>
+</div>
       </div>
     </div>`;
   }).join("");
@@ -986,7 +990,39 @@ async function init(){
 if("serviceWorker" in navigator){
   navigator.serviceWorker.register("./service-worker.js");
 }
+async function approveApplication(id){
 
+  const {error}=await db
+    .from("applications")
+    .update({status:"승인"})
+    .eq("id",id);
+
+  if(error){
+    return alert("승인 오류");
+  }
+
+  await loadData();
+
+  alert("승인 완료");
+}
+
+async function rejectApplication(id){
+
+  const {error}=await db
+    .from("applications")
+    .update({status:"거절"})
+    .eq("id",id);
+
+  if(error){
+    return alert("거절 오류");
+  }
+
+  await loadData();
+
+  alert("거절 완료");
+}
+
+init();
 init();
 </script>
 </body>
