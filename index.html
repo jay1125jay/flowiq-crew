@@ -661,7 +661,7 @@ async function applyJob(jobId){
     job_id:jobId,
     worker_name:workerName || "이름없음",
     phone:workerPhone || "번호없음",
-    company_id:companyId,
+    company_id:job.company_id,
     status:"지원"
   });
 
