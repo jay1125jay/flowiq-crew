@@ -563,6 +563,8 @@ async function refreshData(){await loadData();alert("새로고침 완료")}
 function goHome(){goScreen(lastRole==="manager"?"managerScreen":"workerScreen")}
 function goRoleHome(){goScreen("roleScreen")}
 function navPrimary(){
+  goScreen("workerScreen");
+}{
   if(role==="manager"){
     goScreen("managerScreen");
   }else{
