@@ -756,8 +756,8 @@ async function deleteJob(jobId){
         </div>
 
         <div style="display:flex;flex-direction:column;gap:8px">
-          <button class="blue" onclick='approveApplication(${JSON.stringify(a.id)}, ${JSON.stringify(a.job_id)}, ${JSON.stringify(a.phone)})'>승인</button>
-          <button class="red" onclick='rejectApplication(${JSON.stringify(a.id)}, ${JSON.stringify(a.job_id)}, ${JSON.stringify(a.phone)})'>거절</button>
+          <button type="button" class="blue approve-btn" data-id="${a.id || ''}" data-job-id="${a.job_id || ''}" data-phone="${a.phone || ''}">승인</button>
+          <button type="button" class="red reject-btn" data-id="${a.id || ''}" data-job-id="${a.job_id || ''}" data-phone="${a.phone || ''}">거절</button>
         </div>
       </div>
     </div>`;
@@ -1123,53 +1123,88 @@ if(window.caches){
   caches.keys().then(keys=>keys.forEach(key=>caches.delete(key)));
 }
 
+function markApplicationLocal(id, jobId, phone, status){
+  const cleanId = id === undefined || id === null ? "" : String(id).trim();
+  const cleanJobId = jobId === undefined || jobId === null ? "" : String(jobId).trim();
+  const cleanPhone = phone === undefined || phone === null ? "" : String(phone).trim();
+
+  let changed = false;
+
+  applications = applications.map(a=>{
+    const sameId = cleanId && String(a.id) === cleanId;
+    const sameJobPhone =
+      cleanJobId &&
+      cleanPhone &&
+      String(a.job_id) === cleanJobId &&
+      String(a.phone || "") === cleanPhone;
+
+    if(sameId || sameJobPhone){
+      changed = true;
+      return {...a, status:status};
+    }
+
+    return a;
+  });
+
+  return changed;
+}
+
+async function saveApplicationStatusToDB(id, jobId, phone, status){
+  const cleanId = id === undefined || id === null ? "" : String(id).trim();
+  const cleanJobId = jobId === undefined || jobId === null ? "" : String(jobId).trim();
+  const cleanPhone = phone === undefined || phone === null ? "" : String(phone).trim();
+
+  let result = null;
+
+  if(cleanId){
+    result = await db
+      .from("applications")
+      .update({status:status})
+      .eq("id",cleanId);
+
+    if(!result.error){
+      return true;
+    }
+  }
+
+  if(cleanJobId && cleanPhone){
+    result = await db
+      .from("applications")
+      .update({status:status})
+      .eq("job_id",cleanJobId)
+      .eq("phone",cleanPhone);
+
+    if(!result.error){
+      return true;
+    }
+  }
+
+  if(result && result.error){
+    alert(status + " 저장 오류: " + result.error.message);
+  }else{
+    alert(status + " 저장 오류: 지원 기록을 찾지 못했습니다.");
+  }
+
+  return false;
+}
+
 async function updateApplicationStatus(id, jobId, phone, status){
-  let updatedRows=[];
-  let error=null;
+  const localChanged = markApplicationLocal(id, jobId, phone, status);
 
-  if(id!==undefined && id!==null && String(id).trim()!==""){
-    const result=await db
-      .from("applications")
-      .update({status:status})
-      .eq("id",id)
-      .select("*");
-
-    error=result.error;
-    updatedRows=result.data || [];
+  if(!localChanged){
+    alert("화면의 지원 기록을 찾지 못했습니다. 새로고침 후 다시 시도하세요.");
+    return;
   }
 
-  if(error){
-    alert(status+" 오류: "+error.message);
-    return false;
-  }
-
-  if(updatedRows.length===0 && jobId!==undefined && phone){
-    const result=await db
-      .from("applications")
-      .update({status:status})
-      .eq("job_id",jobId)
-      .eq("phone",phone)
-      .select("*");
-
-    error=result.error;
-    updatedRows=result.data || [];
-  }
-
-  if(error){
-    alert(status+" 오류: "+error.message);
-    return false;
-  }
-
-  if(updatedRows.length===0){
-    alert("처리할 지원 기록을 찾지 못했습니다. 새로고침 후 다시 시도하세요.");
-    return false;
-  }
-
-  await loadData();
   renderManager();
-  show("managerScreen",false);
-  alert(status+" 완료");
-  return true;
+
+  const saved = await saveApplicationStatusToDB(id, jobId, phone, status);
+
+  if(saved){
+    await loadData();
+    renderManager();
+    alert(status + " 완료");
+  }
 }
 
 async function approveApplication(id, jobId, phone){
@@ -1179,6 +1214,31 @@ async function approveApplication(id, jobId, phone){
 async function rejectApplication(id, jobId, phone){
   await updateApplicationStatus(id, jobId, phone, "거절");
 }
+
+document.addEventListener("click", async function(e){
+  const approveBtn = e.target.closest(".approve-btn");
+  const rejectBtn = e.target.closest(".reject-btn");
+
+  if(approveBtn){
+    e.preventDefault();
+    await approveApplication(
+      approveBtn.dataset.id,
+      approveBtn.dataset.jobId,
+      approveBtn.dataset.phone
+    );
+    return;
+  }
+
+  if(rejectBtn){
+    e.preventDefault();
+    await rejectApplication(
+      rejectBtn.dataset.id,
+      rejectBtn.dataset.jobId,
+      rejectBtn.dataset.phone
+    );
+    return;
+  }
+});
 
 init();
 </script>
