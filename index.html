@@ -497,18 +497,24 @@ function selectRole(selected){
     }
  }else if(selected==="manager"){
 
-  const code=prompt("업체 코드를 입력하세요");
-    const password=prompt("업체 비밀번호 입력");
+ const code=prompt("업체 코드를 입력하세요");
 
-if(password!==COMPANY_PASSWORD){
-  alert("비밀번호가 틀렸습니다.");
+if(!code){
+  alert("업체 코드가 필요합니다.");
   return;
 }
 
-  if(!code){
-    alert("업체 코드가 필요합니다.");
-    return;
-  }
+if(!COMPANY_PASSWORDS[code]){
+  alert("존재하지 않는 업체 코드입니다.");
+  return;
+}
+
+const password=prompt("업체 비밀번호 입력");
+
+if(password!==COMPANY_PASSWORDS[code]){
+  alert("비밀번호가 틀렸습니다.");
+  return;
+}
 
   companyId=code;
   localStorage.setItem("company_id",code);
