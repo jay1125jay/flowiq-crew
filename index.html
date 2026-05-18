@@ -653,9 +653,16 @@ function renderJobs(){
 }
 
 async function applyJob(jobId){
+
   if(applications.some(a=>a.phone===workerPhone)){
-  return alert("이미 다른 공고에 지원했습니다. 한 번에 하나의 공고만 지원할 수 있습니다.");
-}
+    return alert("이미 다른 공고에 지원했습니다. 한 번에 하나의 공고만 지원할 수 있습니다.");
+  }
+
+  const job=jobs.find(j=>Number(j.id)===Number(jobId));
+
+  if(!job){
+    return alert("공고를 찾을 수 없습니다.");
+  }
 
   const {error}=await db.from("applications").insert({
     job_id:jobId,
@@ -669,12 +676,12 @@ async function applyJob(jobId){
     return alert("지원 저장 오류: "+error.message);
   }
 
-  const job=jobs.find(j=>Number(j.id)===Number(jobId));
-  if(job){
-    await db.from("jobs").update({applied:(job.applied||0)+1}).eq("id",jobId);
-  }
+  await db.from("jobs").update({
+    applied:(job.applied||0)+1
+  }).eq("id",jobId);
 
   await loadData();
+
   alert("지원 완료!");
 }
 
