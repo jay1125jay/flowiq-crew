@@ -858,8 +858,18 @@ function navPrimary(){
 function navSecondary(){if(role==="manager")goScreen("managerScreen");else showPayroll()}
 
 function updateNav(){
-  navJobs.innerText=role==="manager"?"공고":"일자리";
-  navPay.innerText=role==="manager"?"현황":"급여";
+  navJobs.innerText=
+  role==="manager"
+    ?"공고"
+    :role==="master"
+      ?"전체공고"
+      :"일자리";
+  navPay.innerText=
+  role==="manager"
+    ?"현황"
+    :role==="master"
+      ?"전체현황"
+      :"급여";
   ["navHome","navJobs","navQR","navPay"].forEach(id=>document.getElementById(id).classList.remove("active"));
   if(["workerScreen","managerScreen"].includes(currentScreen))navHome.classList.add("active");
   if(currentScreen==="jobFormScreen")navJobs.classList.add("active");
