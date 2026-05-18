@@ -574,10 +574,15 @@ function saveWorkerInfo(){
   let attendanceQuery=db.from("attendance").select("*");
 
   if(role==="manager"){
-  jobsQuery=jobsQuery.eq("company_id",companyId);
-  applicationsQuery=applicationsQuery.eq("company_id",companyId);
-  attendanceQuery=attendanceQuery.eq("company_id",companyId);
-}
+    jobsQuery=jobsQuery.eq("company_id",companyId);
+    applicationsQuery=applicationsQuery.eq("company_id",companyId);
+    attendanceQuery=attendanceQuery.eq("company_id",companyId);
+  }
+
+  if(role==="worker" && workerPhone){
+    applicationsQuery=applicationsQuery.eq("phone",workerPhone);
+    attendanceQuery=attendanceQuery.eq("phone",workerPhone);
+  }
 
   const jr=await jobsQuery.order("created_at",{ascending:false});
   const ar=await applicationsQuery.order("created_at",{ascending:false});
@@ -620,7 +625,8 @@ function renderJobs(){
 
   el.innerHTML=filteredJobs.length
   ? filteredJobs.map(j=>{
-    const already=applications.some(a=>Number(a.job_id)===Number(j.id));
+    const myApplication=applications.find(a=>Number(a.job_id)===Number(j.id) && a.phone===workerPhone);
+    const already=!!myApplication;
 
     return `
     <div class="card">
@@ -638,7 +644,7 @@ function renderJobs(){
 
       ${role==="worker"
         ? `<button class="full ${already?'gray':'blue'}" onclick="applyJob(${j.id})">
-            ${already?'지원 완료':'지원하기'}
+            ${already?`지원 ${myApplication.status || "완료"}`:'지원하기'}
           </button>`
         : ""
       }
@@ -716,8 +722,11 @@ async function deleteJob(jobId){
       ? attendance.filter(a=>a.company_id===companyId)
       : attendance;
 
+  const pendingApplications=filteredApplications.filter(a=>(a.status || "지원")==="지원");
+  const processedApplications=filteredApplications.filter(a=>(a.status || "지원")!=="지원");
+
   document.getElementById("mChecked").innerText=filteredAttendance.length;
-  document.getElementById("mApplied").innerText=filteredApplications.length;
+  document.getElementById("mApplied").innerText=pendingApplications.length;
   document.getElementById("mJobs").innerText=filteredJobs.length;
 
   if(role==="manager"){
@@ -727,7 +736,27 @@ async function deleteJob(jobId){
     document.getElementById("managerTitle").innerText="FlowIQ MASTER";
   }
 
-  const appRows=filteredApplications.map(a=>{
+  const pendingRows=pendingApplications.map(a=>{
+    const job=jobs.find(j=>Number(j.id)===Number(a.job_id));
+
+    return `
+    <div class="card">
+      <div class="worker-row">
+        <div>
+          <div class="worker-name">${a.worker_name} (${a.phone || "번호없음"})</div>
+          <div class="worker-meta">지원 공고: ${job?job.title:'삭제된 공고'} · ${new Date(a.created_at).toLocaleString()}</div>
+          <div class="info">상태: 지원 대기</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="blue" onclick="approveApplication(${a.id})">승인</button>
+          <button class="red" onclick="rejectApplication(${a.id})">거절</button>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+
+  const processedRows=processedApplications.map(a=>{
     const job=jobs.find(j=>Number(j.id)===Number(a.job_id));
     const status=a.status || "지원";
 
@@ -737,23 +766,9 @@ async function deleteJob(jobId){
         <div>
           <div class="worker-name">${a.worker_name} (${a.phone || "번호없음"})</div>
           <div class="worker-meta">지원 공고: ${job?job.title:'삭제된 공고'} · ${new Date(a.created_at).toLocaleString()}</div>
-          <div class="info">상태: ${status}</div>
+          <div class="info">처리 결과: ${status}</div>
         </div>
-
-        ${
-          status === "지원"
-          ? `
-            <div style="display:flex;flex-direction:column;gap:8px">
-              <button class="blue" onclick="approveApplication(${a.id})">승인</button>
-              <button class="red" onclick="rejectApplication(${a.id})">거절</button>
-            </div>
-          `
-          : `
-            <div class="status ${status === "승인" ? "ok" : "wait"}">
-              ${status}
-            </div>
-          `
-        }
+        <div class="status ${status==="승인" || status==="출근완료" ? "ok" : "wait"}">${status}</div>
       </div>
     </div>`;
   }).join("");
@@ -770,8 +785,16 @@ async function deleteJob(jobId){
     </div>`).join("");
 
   document.getElementById("workersList").innerHTML=
-    (attRows+appRows) ||
-    `<div class="card"><div class="sub">아직 지원/출근 기록이 없습니다.</div></div>`;
+    `
+      <div class="section">지원 대기</div>
+      ${pendingRows || `<div class="card"><div class="sub">대기중인 지원자가 없습니다.</div></div>`}
+
+      <div class="section">처리 완료</div>
+      ${processedRows || `<div class="card"><div class="sub">아직 승인/거절 처리된 지원자가 없습니다.</div></div>`}
+
+      <div class="section">출근 완료</div>
+      ${attRows || `<div class="card"><div class="sub">아직 출근 기록이 없습니다.</div></div>`}
+    `;
 }
   async function createJob(){
   const title=fTitle.value.trim();
@@ -843,12 +866,24 @@ async function saveAttendance(job){
 phone:workerPhone || "번호없음",
         job_title:job.title,
         amount:job.salary,
-        company_id:companyId,
+        company_id:job.company_id,
         gps:gps
       });
 
-      if(error)reject(error.message);
-      else resolve(gps);
+      if(error){
+        reject(error.message);
+        return;
+      }
+
+      if(workerPhone){
+        await db
+          .from("applications")
+          .update({status:"출근완료"})
+          .eq("job_id",job.id)
+          .eq("phone",workerPhone);
+      }
+
+      resolve(gps);
     },()=>{
       reject("GPS 권한이 필요합니다.");
     });
@@ -903,7 +938,11 @@ function renderPayroll(){
   const el=document.getElementById("payrollList");
   if(!el)return;
 
-  el.innerHTML=attendance.length?attendance.map(a=>`
+  const myAttendance=role==="worker" && workerPhone
+    ? attendance.filter(a=>a.phone===workerPhone)
+    : attendance;
+
+  el.innerHTML=myAttendance.length?myAttendance.map(a=>`
     <div class="card">
       <div class="job-head">
         <div>
@@ -939,7 +978,13 @@ function goRoleSelect(){
 function goRoleHome(){
   goRoleSelect();
 }
-function navPrimary(){goScreen("workerScreen")}
+function navPrimary(){
+  if(role==="manager" || role==="master"){
+    goScreen("jobFormScreen");
+  }else{
+    goScreen("workerScreen");
+  }
+}
 function navSecondary(){
   if(role==="manager" || role==="master"){
     goScreen("managerScreen");
@@ -1010,8 +1055,15 @@ async function init(){
   await autoCheckIn();
 }
 
+// 개발 중에는 이전 HTML이 캐시되어 수정이 안 보이는 문제가 생길 수 있어서 서비스워커를 해제합니다.
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("./service-worker.js");
+  navigator.serviceWorker.getRegistrations().then(registrations=>{
+    registrations.forEach(registration=>registration.unregister());
+  });
+}
+
+if(window.caches){
+  caches.keys().then(keys=>keys.forEach(key=>caches.delete(key)));
 }
 
 async function approveApplication(id){
