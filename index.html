@@ -900,13 +900,22 @@ function renderPayroll(){
 async function refreshData(){await loadData();alert("새로고침 완료")}
 function goHome(){goScreen((role==="manager"||role==="master")?"managerScreen":"workerScreen")}
 function goRoleHome(){
-  if(role==="manager" || role==="master"){
+  const savedRole=localStorage.getItem("crew_role") || role;
+
+  if(savedRole==="manager" || savedRole==="master"){
+    role=savedRole;
     goScreen("managerScreen");
-  }else if(role==="worker"){
-    goScreen("workerScreen");
-  }else{
-    goScreen("roleScreen");
+    return;
   }
+
+  if(savedRole==="worker"){
+    role="worker";
+    goScreen("workerScreen");
+    return;
+  }
+
+  goScreen("roleScreen");
+}
 }
 function navPrimary(){goScreen("workerScreen")}
 function navSecondary(){
