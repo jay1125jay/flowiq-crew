@@ -344,9 +344,7 @@ function renderJobs(){
       <div class="info">🌐 ${j.language}</div>
       <button class="full ${already?'gray':'blue'}" onclick="applyJob(${j.id})">${already?'지원 완료':'지원하기'}</button>
       ${role==="manager" ? `
-<button class="full red" onclick="deleteJob(${j.id})">
-삭제하기
-</button>
+${role==="manager"?'<button class="full red" onclick="deleteJob('+j.id+')">삭제하기</button>':''}
 ` : ``}
 삭제하기
 </button>
