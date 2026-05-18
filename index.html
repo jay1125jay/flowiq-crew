@@ -273,20 +273,19 @@ function selectRole(selected){
     }else{
       goScreen("workerScreen");
     }
-    }else if(selected==="manager"){
+  }else if(selected==="manager"){
     goScreen("managerScreen");
   }else{
-    }else{
+    const password=prompt("MASTER 비밀번호 입력");
 
-  const password=prompt("MASTER 비밀번호 입력");
+    if(password!==MASTER_PASSWORD){
+      alert("비밀번호가 틀렸습니다.");
+      return;
+    }
 
-  if(password!==MASTER_PASSWORD){
-    alert("비밀번호가 틀렸습니다.");
-    return;
+    goScreen("managerScreen");
+    alert("MASTER MODE");
   }
-
-  goScreen("managerScreen");
-  alert("MASTER MODE");
 }
 
 function saveWorkerInfo(){
