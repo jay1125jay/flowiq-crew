@@ -619,7 +619,13 @@ function renderJobs(){
       <div class="info">🕒 ${j.work_time}</div>
       <div class="info">👥 ${j.applied||0}/${j.needed}명 지원</div>
       <div class="info">🌐 ${j.language}</div>
-      <button class="full ${already?'gray':'blue'}" onclick="applyJob(${j.id})">${already?'지원 완료':'지원하기'}</button>
+      ${role==="master"
+  ? ""
+  : `<button class="full ${already?'gray':'blue'}"
+onclick="applyJob(${j.id})">
+${already?'지원 완료':'지원하기'}
+</button>`
+}
   ${role==="master"?'<button class="full red" onclick="deleteJob('+j.id+')">삭제하기</button>':''}
     </div>`;
   }).join(""):`<div class="card"><div class="title">공고가 없습니다</div><div class="sub">관리자 앱에서 공고를 생성하세요.</div></div>`;
