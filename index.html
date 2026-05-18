@@ -296,38 +296,18 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   box-shadow:0 6px 18px rgba(0,0,0,.18);
 }
 #languageGrid button{background:linear-gradient(180deg,#0f172a 0%,#111827 100%);border:1px solid rgba(255,255,255,.05);}
+#languageScreen .notice{
+  margin-top:18px;
+}
+#languageGrid button{
+  min-height:72px;
+  font-size:16px;
+}
+
 </style>
 </head>
 
 <body>
-  <div id="languageScreen">
-  <h2>언어 선택</h2>
-
-  <button onclick="setLang('ko')">🇰🇷 한국어</button>
-  <button onclick="setLang('vi')">🇻🇳 Tiếng Việt</button>
-  <button onclick="setLang('mn')">🇲🇳 Монгол</button>
-  <button onclick="setLang('np')">🇳🇵 नेपाली</button>
-  <button onclick="setLang('uz')">🇺🇿 Oʻzbek</button>
-</div>
-<div id="languageScreen" style="text-align:center;padding:40px;">
-  
-  <h2 id="langTitle">언어를 선택하세요</h2>
-
-  <button onclick="setLang('ko')">🇰🇷 한국어</button>
-  <br><br>
-
-  <button onclick="setLang('vi')">🇻🇳 Tiếng Việt</button>
-  <br><br>
-
-  <button onclick="setLang('mn')">🇲🇳 Монгол</button>
-  <br><br>
-
-  <button onclick="setLang('np')">🇳🇵 नेपाली</button>
-  <br><br>
-
-  <button onclick="setLang('uz')">🇺🇿 Oʻzbek</button>
-<div id="appContent" style="display:none;">
-</div>
 <main class="app">
 <header class="top">
   <div>
@@ -496,7 +476,17 @@ const SUPABASE_URL="https://zhbzphvqiiijfjqnktlo.supabase.co";
 const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoYnpwaHZxaWlpamZqcW5rdGxvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwNDEwNTcsImV4cCI6MjA5NDYxNzA1N30.ufIPHJh2fzRLm5taos3yTz6pGlEHFKaSoYI2Ref3T5I";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-const languages=["한국어","English","Монгол","Tiếng Việt","ไทย","中文","Русский","नेपाली","Oʻzbek"];
+const languages=[
+  {label:"🇰🇷 한국어",value:"한국어"},
+  {label:"🇺🇸 English",value:"English"},
+  {label:"🇲🇳 Монгол",value:"Монгол"},
+  {label:"🇻🇳 Tiếng Việt",value:"Tiếng Việt"},
+  {label:"🇹🇭 ไทย",value:"ไทย"},
+  {label:"🇨🇳 中文",value:"中文"},
+  {label:"🇷🇺 Русский",value:"Русский"},
+  {label:"🇳🇵 नेपाली",value:"नेपाली"},
+  {label:"🇺🇿 Oʻzbek",value:"Oʻzbek"}
+];
 let role=localStorage.getItem("crew_role")||null;
 let workerName=localStorage.getItem("worker_name")||"";
 let workerPhone=localStorage.getItem("worker_phone")||"";
@@ -506,7 +496,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v4.4 premium-status-colors';
+let APP_VERSION='FlowIQ Crew v4.5 cleaned-language-structure';
   
 const MASTER_PASSWORD="1234";
 const COMPANY_PASSWORDS={
@@ -799,9 +789,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v4.4";
+      (COMPANY_NAMES[companyId] || companyId) + " · v4.5";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v4.4";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v4.5";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -1184,7 +1174,9 @@ window.onpopstate=e=>{
 };
 
 async function init(){
-  languageGrid.innerHTML=languages.map(l=>`<button onclick="selectLanguage('${l}')">${l}</button>`).join("");
+  languageGrid.innerHTML=languages.map(l=>
+    `<button onclick="selectLanguage('${l.value}')">${l.label}</button>`
+  ).join("");
   await seedJobsIfEmpty();
 
   const savedLanguage=localStorage.getItem("crew_language");
@@ -1309,38 +1301,6 @@ document.addEventListener("click",async function(e){
 });
 
 init();
-  const LANG = {
-  ko: {
-    select: "언어를 선택하세요",
-    apply: "지원하기",
-    checkin: "출근"
-  },
-  vi: {
-    select: "Chọn ngôn ngữ",
-    apply: "Ứng tuyển",
-    checkin: "Đi làm"
-  }
-};
-
-let currentLang = localStorage.getItem("lang") || "ko";
-
-function t(key){
-  return LANG[currentLang]?.[key] || key;
-}
-
-function setLang(lang){
-  currentLang = lang;
-  localStorage.setItem("lang", lang);
-}
-function setLang(lang){
-  localStorage.setItem("lang", lang);
-
-  // 언어 선택 화면 숨기기
-  document.getElementById("languageScreen").style.display = "none";
-
-  // 앱 화면 보이기 (기존 앱 전체)
-  document.body.style.display = "block";
-}
 </script>
 </body>
 </html>
