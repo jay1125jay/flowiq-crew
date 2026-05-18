@@ -452,14 +452,15 @@ let attendance=[];
   
 const MASTER_PASSWORD="1234";
 const COMPANY_PASSWORDS={
-  const COMPANY_NAMES={
-  demo_company:"FlowIQ Demo",
-  alpha:"Alpha Logistics",
-  beta:"Beta Factory"
-};
   demo_company:"0000",
   alpha:"1111",
   beta:"2222"
+};
+
+const COMPANY_NAMES={
+  demo_company:"FlowIQ Demo",
+  alpha:"Alpha Logistics",
+  beta:"Beta Factory"
 };
   
 let companyId=localStorage.getItem("company_id")||"demo_company";
@@ -847,9 +848,7 @@ async function refreshData(){await loadData();alert("새로고침 완료")}
 function goHome(){goScreen(lastRole==="manager"?"managerScreen":"workerScreen")}
 function goRoleHome(){goScreen("roleScreen")}
 function navPrimary(){
-  goScreen("workerScreen");
-}{
-  if(role==="manager"){
+  if(role==="manager" || role==="master"){
     goScreen("managerScreen");
   }else{
     goScreen("workerScreen");
