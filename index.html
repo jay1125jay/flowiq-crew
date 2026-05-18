@@ -259,7 +259,24 @@ function show(id,push=false){
 function goScreen(id){show(id,true)}
 function selectLanguage(language){localStorage.setItem("crew_language",language);goScreen("roleScreen")}
 function selectRole(selected){role=selected;lastRole=selected;localStorage.setItem("crew_role",selected);goScreen(selected==="worker"?"workerScreen":"managerScreen")}
+function saveWorkerInfo(){
 
+  const name=document.getElementById("workerNameInput").value.trim();
+  const phone=document.getElementById("workerPhoneInput").value.trim();
+
+  if(!name || !phone){
+    alert("이름과 연락처를 입력하세요.");
+    return;
+  }
+
+  workerName=name;
+  workerPhone=phone;
+
+  localStorage.setItem("worker_name",name);
+  localStorage.setItem("worker_phone",phone);
+
+  goScreen("workerScreen");
+}
 async function loadData(){
   const jr=await db.from("jobs").select("*").order("created_at",{ascending:false});
   const ar=await db.from("applications").select("*").order("created_at",{ascending:false});
