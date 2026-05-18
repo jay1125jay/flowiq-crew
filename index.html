@@ -573,7 +573,7 @@ function saveWorkerInfo(){
   let applicationsQuery=db.from("applications").select("*");
   let attendanceQuery=db.from("attendance").select("*");
 
-  if(role!=="master"){
+  if(role==="master"){
     jobsQuery=jobsQuery.eq("company_id",companyId);
     applicationsQuery=applicationsQuery.eq("company_id",companyId);
     attendanceQuery=attendanceQuery.eq("company_id",companyId);
@@ -613,9 +613,10 @@ function renderJobs(){
   const el=document.getElementById("jobsList");
   if(!el)return;
 
-  const filteredJobs = role==="master"
-    ? jobs
-    : jobs.filter(j=>j.company_id===companyId);
+  const filteredJobs =
+  role==="manager"
+    ? jobs.filter(j=>j.company_id===companyId)
+    : jobs;
 
   el.innerHTML=filteredJobs.length
   ? filteredJobs.map(j=>{
