@@ -1166,6 +1166,7 @@ async function updateApplicationStatus(id, jobId, phone, status){
   }
 
   await loadData();
+  renderManager();
   show("managerScreen",false);
   alert(status+" 완료");
   return true;
