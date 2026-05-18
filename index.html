@@ -350,7 +350,21 @@ function renderJobs(){
   }).join(""):`<div class="card"><div class="title">공고가 없습니다</div><div class="sub">관리자 앱에서 공고를 생성하세요.</div></div>`;
 }
 
-async function applyJob(jobId){
+async function applyJobasync function deleteJob(jobId){
+  if(!confirm("이 공고를 삭제할까요?")){
+    return;
+  }
+
+  const {error}=await db.from("jobs").delete().eq("id",jobId);
+
+  if(error){
+    alert("삭제 오류: "+error.message);
+    return;
+  }
+
+  await loadData();
+  alert("공고가 삭제되었습니다.");
+}(jobId){
   if(applications.some(a=>Number(a.job_id)===Number(jobId)))return alert("이미 지원한 공고입니다.");
 
   const {error}=await db.from("applications").insert({
