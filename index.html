@@ -855,6 +855,31 @@ async function saveAttendance(job){
       return;
     }
 
+    if(role==="worker" && workerPhone){
+      const myApplication=applications.find(
+        a=>Number(a.job_id)===Number(job.id) && a.phone===workerPhone
+      );
+
+      if(!myApplication){
+        reject("지원한 공고만 출근할 수 있습니다.");
+        return;
+      }
+
+      if((myApplication.status || "지원")!=="승인"){
+        reject("관리자 승인 후 출근할 수 있습니다.");
+        return;
+      }
+
+      const alreadyCheckedIn=attendance.some(
+        a=>Number(a.job_id)===Number(job.id) && a.phone===workerPhone
+      );
+
+      if(alreadyCheckedIn){
+        reject("이미 출근 처리된 공고입니다.");
+        return;
+      }
+    }
+
     navigator.geolocation.getCurrentPosition(async position=>{
       const lat=position.coords.latitude;
       const lng=position.coords.longitude;
@@ -863,7 +888,7 @@ async function saveAttendance(job){
       const {error}=await db.from("attendance").insert({
         job_id:job.id,
         worker_name:workerName || "이름없음",
-phone:workerPhone || "번호없음",
+        phone:workerPhone || "번호없음",
         job_title:job.title,
         amount:job.salary,
         company_id:job.company_id,
@@ -892,8 +917,17 @@ phone:workerPhone || "번호없음",
 
 async function completeQR(){
   if(lastRole==="worker"){
-    const job=jobs[0];
-    if(!job)return alert("출근할 공고가 없습니다.");
+    const approvedApplication=applications.find(a=>(a.status || "지원")==="승인");
+
+    if(!approvedApplication){
+      return alert("관리자 승인 완료된 공고만 출근할 수 있습니다.");
+    }
+
+    const job=jobs.find(j=>Number(j.id)===Number(approvedApplication.job_id));
+
+    if(!job){
+      return alert("출근할 공고를 찾을 수 없습니다.");
+    }
 
     try{
       await saveAttendance(job);
