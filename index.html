@@ -285,7 +285,7 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
 
 <div class="top-actions hidden" id="topActions">
   <button class="gray" onclick="history.back()">← 뒤로</button>
-  <button class="gray" onclick="goRoleSelect()">홈</button>
+  <button class="gray" onclick="goRoleSelect()">역할변경</button>
   <button class="red" onclick="refreshData()">새로고침</button>
 </div>
 
@@ -653,7 +653,6 @@ function renderJobs(){
 }
 
 async function applyJob(jobId){
-
   if(applications.some(a=>a.phone===workerPhone)){
     return alert("이미 다른 공고에 지원했습니다. 한 번에 하나의 공고만 지원할 수 있습니다.");
   }
@@ -681,10 +680,8 @@ async function applyJob(jobId){
   }).eq("id",jobId);
 
   await loadData();
-
   alert("지원 완료!");
 }
-
 async function deleteJob(jobId){
   if(!confirm("이 공고를 삭제할까요?")){
     return;
@@ -731,36 +728,35 @@ async function deleteJob(jobId){
   }
 
   const appRows=filteredApplications.map(a=>{
-  const job=jobs.find(j=>Number(j.id)===Number(a.job_id));
+    const job=jobs.find(j=>Number(j.id)===Number(a.job_id));
+    const status=a.status || "지원";
 
-  return `
-  <div class="card">
-    <div class="worker-row">
-      <div>
-        <div class="worker-name">${a.worker_name} (${a.phone || "번호없음"})</div>
-        <div class="worker-meta">
-          지원 공고: ${job?job.title:'삭제된 공고'} · ${new Date(a.created_at).toLocaleString()}
+    return `
+    <div class="card">
+      <div class="worker-row">
+        <div>
+          <div class="worker-name">${a.worker_name} (${a.phone || "번호없음"})</div>
+          <div class="worker-meta">지원 공고: ${job?job.title:'삭제된 공고'} · ${new Date(a.created_at).toLocaleString()}</div>
+          <div class="info">상태: ${status}</div>
         </div>
-        <div class="info">상태: ${a.status || "지원"}</div>
-      </div>
 
-      ${
-  (a.status || "지원") === "지원"
-  ? `
-    <div style="display:flex;flex-direction:column;gap:8px">
-      <button class="blue" onclick="approveApplication(${a.id})">승인</button>
-      <button class="red" onclick="rejectApplication(${a.id})">거절</button>
-    </div>
-  `
-  : `
-    <div class="status ${a.status==="승인" ? "ok" : "wait"}">
-      ${a.status}
-    </div>
-  `
-}
-    </div>
-  </div>`;
-}).join("");
+        ${
+          status === "지원"
+          ? `
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <button class="blue" onclick="approveApplication(${a.id})">승인</button>
+              <button class="red" onclick="rejectApplication(${a.id})">거절</button>
+            </div>
+          `
+          : `
+            <div class="status ${status === "승인" ? "ok" : "wait"}">
+              ${status}
+            </div>
+          `
+        }
+      </div>
+    </div>`;
+  }).join("");
 
   const attRows=filteredAttendance.map(a=>`
     <div class="card">
@@ -923,12 +919,25 @@ function renderPayroll(){
 }
 
 async function refreshData(){await loadData();alert("새로고침 완료")}
-function goHome(){goScreen((role==="manager"||role==="master")?"managerScreen":"workerScreen")}
- function goRoleSelect(){
+
+function goHome(){
+  if(role==="manager" || role==="master"){
+    goScreen("managerScreen");
+  }else{
+    goScreen("workerScreen");
+  }
+}
+
+function goRoleSelect(){
+  role=null;
+  lastRole=null;
+  localStorage.removeItem("crew_role");
+  localStorage.removeItem("company_id");
   goScreen("roleScreen");
-} 
+}
+
 function goRoleHome(){
-  goScreen("roleScreen");
+  goRoleSelect();
 }
 function navPrimary(){goScreen("workerScreen")}
 function navSecondary(){
@@ -1004,39 +1013,35 @@ async function init(){
 if("serviceWorker" in navigator){
   navigator.serviceWorker.register("./service-worker.js");
 }
-async function approveApplication(id){
 
+async function approveApplication(id){
   const {error}=await db
     .from("applications")
     .update({status:"승인"})
     .eq("id",id);
 
   if(error){
-    return alert("승인 오류");
+    return alert("승인 오류: "+error.message);
   }
 
   await loadData();
-
   alert("승인 완료");
 }
 
 async function rejectApplication(id){
-
   const {error}=await db
     .from("applications")
     .update({status:"거절"})
     .eq("id",id);
 
   if(error){
-    return alert("거절 오류");
+    return alert("거절 오류: "+error.message);
   }
 
   await loadData();
-
   alert("거절 완료");
 }
 
-init();
 init();
 </script>
 </body>
