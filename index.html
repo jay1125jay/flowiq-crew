@@ -619,12 +619,12 @@ function renderJobs(){
       <div class="info">🕒 ${j.work_time}</div>
       <div class="info">👥 ${j.applied||0}/${j.needed}명 지원</div>
       <div class="info">🌐 ${j.language}</div>
-      ${role==="master"
-  ? ""
-  : `<button class="full ${already?'gray':'blue'}"
+     ${role==="worker"
+  ? `<button class="full ${already?'gray':'blue'}"
 onclick="applyJob(${j.id})">
 ${already?'지원 완료':'지원하기'}
 </button>`
+  : ""
 }
   ${role==="master"?'<button class="full red" onclick="deleteJob('+j.id+')">삭제하기</button>':''}
     </div>`;
