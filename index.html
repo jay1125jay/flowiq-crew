@@ -276,6 +276,15 @@ function selectRole(selected){
   }
 }
 
+ function saveWorkerInfo(){
+  const name=document.getElementById("workerNameInput").value.trim();
+  const phone=document.getElementById("workerPhoneInput").value.trim();
+
+  if(!name || !phone){
+    alert("이름과 연락처를 입력하세요.");
+    return;
+  }
+
   workerName=name;
   workerPhone=phone;
 
@@ -344,7 +353,8 @@ async function applyJob(jobId){
 
   const {error}=await db.from("applications").insert({
     job_id:jobId,
-    worker_name:"Demo Worker",
+    worker_name:workerName || "이름없음",
+phone:workerPhone || "번호없음",
     status:"지원"
   });
 
