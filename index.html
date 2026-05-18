@@ -900,11 +900,6 @@ function renderPayroll(){
 async function refreshData(){await loadData();alert("새로고침 완료")}
 function goHome(){goScreen((role==="manager"||role==="master")?"managerScreen":"workerScreen")}
 function goRoleHome(){
-  role=null;
-  lastRole=null;
-
-  localStorage.removeItem("crew_role");
-
   goScreen("roleScreen");
 }
 function navPrimary(){goScreen("workerScreen")}
