@@ -858,23 +858,38 @@ function navPrimary(){
 function navSecondary(){if(role==="manager")goScreen("managerScreen");else showPayroll()}
 
 function updateNav(){
-  navJobs.innerText=
-  role==="manager"
-    ?"공고"
-    :role==="master"
-      ?"전체공고"
-      :"일자리";
-  navPay.innerText=
-  role==="manager"
-    ?"현황"
-    :role==="master"
-      ?"전체현황"
-      :"급여";
-  ["navHome","navJobs","navQR","navPay"].forEach(id=>document.getElementById(id).classList.remove("active"));
-  if(["workerScreen","managerScreen"].includes(currentScreen))navHome.classList.add("active");
-  if(currentScreen==="jobFormScreen")navJobs.classList.add("active");
-  if(currentScreen==="qrScreen")navQR.classList.add("active");
-  if(currentScreen==="payrollScreen")navPay.classList.add("active");
+
+  if(role==="manager"){
+    navJobs.innerText="공고";
+    navPay.innerText="현황";
+
+  }else if(role==="master"){
+    navJobs.innerText="전체공고";
+    navPay.innerText="전체현황";
+
+  }else{
+    navJobs.innerText="일자리";
+    navPay.innerText="급여";
+  }
+
+  ["navHome","navJobs","navQR","navPay"]
+    .forEach(id=>document.getElementById(id).classList.remove("active"));
+
+  if(["workerScreen","managerScreen"].includes(currentScreen)){
+    navHome.classList.add("active");
+  }
+
+  if(currentScreen==="jobFormScreen"){
+    navJobs.classList.add("active");
+  }
+
+  if(currentScreen==="qrScreen"){
+    navQR.classList.add("active");
+  }
+
+  if(currentScreen==="payrollScreen"){
+    navPay.classList.add("active");
+  }
 }
 
 window.onpopstate=e=>{
