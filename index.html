@@ -562,7 +562,13 @@ function renderPayroll(){
 async function refreshData(){await loadData();alert("새로고침 완료")}
 function goHome(){goScreen(lastRole==="manager"?"managerScreen":"workerScreen")}
 function goRoleHome(){goScreen("roleScreen")}
-function navPrimary(){if(role==="manager")goScreen("jobFormScreen");else goScreen("workerScreen")}
+function navPrimary(){
+  if(role==="manager"){
+    goScreen("managerScreen");
+  }else{
+    goScreen("workerScreen");
+  }
+}
 function navSecondary(){if(role==="manager")goScreen("managerScreen");else showPayroll()}
 
 function updateNav(){
