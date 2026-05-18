@@ -286,7 +286,8 @@ function selectRole(selected){
   localStorage.setItem("company_id",code);
 
   goScreen("managerScreen");
-}else{
+}
+  else{
     const password=prompt("MASTER 비밀번호 입력");
 
     if(password!==MASTER_PASSWORD){
