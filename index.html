@@ -300,6 +300,15 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
 </head>
 
 <body>
+  <div id="languageScreen">
+  <h2>언어 선택</h2>
+
+  <button onclick="setLang('ko')">🇰🇷 한국어</button>
+  <button onclick="setLang('vi')">🇻🇳 Tiếng Việt</button>
+  <button onclick="setLang('mn')">🇲🇳 Монгол</button>
+  <button onclick="setLang('np')">🇳🇵 नेपाली</button>
+  <button onclick="setLang('uz')">🇺🇿 Oʻzbek</button>
+</div>
 <div id="languageScreen" style="text-align:center;padding:40px;">
   
   <h2 id="langTitle">언어를 선택하세요</h2>
@@ -1322,6 +1331,15 @@ function t(key){
 function setLang(lang){
   currentLang = lang;
   localStorage.setItem("lang", lang);
+}
+function setLang(lang){
+  localStorage.setItem("lang", lang);
+
+  // 언어 선택 화면 숨기기
+  document.getElementById("languageScreen").style.display = "none";
+
+  // 앱 화면 보이기 (기존 앱 전체)
+  document.body.style.display = "block";
 }
 </script>
 </body>
