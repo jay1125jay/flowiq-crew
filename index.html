@@ -712,25 +712,28 @@ async function deleteJob(jobId){
 }
 
   function renderManager(){
-  if(!document.getElementById("mChecked"))return;
+  const mChecked=document.getElementById("mChecked");
+  const workersList=document.getElementById("workersList");
+  if(!mChecked || !workersList)return;
 
   const filteredJobs =
     role==="manager"
-      ? jobs.filter(j=>j.company_id===companyId)
+      ? jobs.filter(j=>String(j.company_id)===String(companyId))
       : jobs;
 
   const filteredApplications =
     role==="manager"
-      ? applications.filter(a=>a.company_id===companyId)
+      ? applications.filter(a=>String(a.company_id)===String(companyId))
       : applications;
 
   const filteredAttendance =
     role==="manager"
-      ? attendance.filter(a=>a.company_id===companyId)
+      ? attendance.filter(a=>String(a.company_id)===String(companyId))
       : attendance;
 
-  const pendingApplications=filteredApplications.filter(a=>(a.status || "지원")==="지원");
-  const processedApplications=filteredApplications.filter(a=>(a.status || "지원")!=="지원");
+  const getStatus=(a)=>String(a.status || "지원").trim() || "지원";
+  const pendingApplications=filteredApplications.filter(a=>getStatus(a)==="지원");
+  const processedApplications=filteredApplications.filter(a=>getStatus(a)!=="지원");
 
   document.getElementById("mChecked").innerText=filteredAttendance.length;
   document.getElementById("mApplied").innerText=pendingApplications.length;
@@ -743,21 +746,28 @@ async function deleteJob(jobId){
     document.getElementById("managerTitle").innerText="FlowIQ MASTER";
   }
 
+  const makeRef=(a)=>encodeURIComponent(JSON.stringify({
+    id:a.id ?? "",
+    job_id:a.job_id ?? "",
+    phone:a.phone ?? ""
+  }));
+
   const pendingRows=pendingApplications.map(a=>{
     const job=jobs.find(j=>Number(j.id)===Number(a.job_id));
+    const ref=makeRef(a);
 
     return `
     <div class="card">
       <div class="worker-row">
         <div>
-          <div class="worker-name">${a.worker_name} (${a.phone || "번호없음"})</div>
-          <div class="worker-meta">지원 공고: ${job?job.title:'삭제된 공고'} · ${new Date(a.created_at).toLocaleString()}</div>
+          <div class="worker-name">${a.worker_name || "이름없음"} (${a.phone || "번호없음"})</div>
+          <div class="worker-meta">지원 공고: ${job?job.title:"삭제된 공고"} · ${a.created_at ? new Date(a.created_at).toLocaleString() : ""}</div>
           <div class="info">상태: 지원 대기</div>
         </div>
 
         <div style="display:flex;flex-direction:column;gap:8px">
-          <button type="button" class="blue approve-btn" data-id="${a.id || ''}" data-job-id="${a.job_id || ''}" data-phone="${a.phone || ''}">승인</button>
-          <button type="button" class="red reject-btn" data-id="${a.id || ''}" data-job-id="${a.job_id || ''}" data-phone="${a.phone || ''}">거절</button>
+          <button type="button" class="blue approve-btn" data-ref="${ref}">승인</button>
+          <button type="button" class="red reject-btn" data-ref="${ref}">거절</button>
         </div>
       </div>
     </div>`;
@@ -765,19 +775,18 @@ async function deleteJob(jobId){
 
   const processedRows=processedApplications.map(a=>{
     const job=jobs.find(j=>Number(j.id)===Number(a.job_id));
-    const status=(a.status || "").trim();
+    const status=getStatus(a);
+    const statusClass=(status==="승인" || status==="출근완료") ? "ok" : "wait";
 
     return `
     <div class="card">
       <div class="worker-row">
         <div>
-          <div class="worker-name">${a.worker_name} (${a.phone || "번호없음"})</div>
-          <div class="worker-meta">지원 공고: ${job?job.title:'삭제된 공고'} · ${new Date(a.created_at).toLocaleString()}</div>
+          <div class="worker-name">${a.worker_name || "이름없음"} (${a.phone || "번호없음"})</div>
+          <div class="worker-meta">지원 공고: ${job?job.title:"삭제된 공고"} · ${a.created_at ? new Date(a.created_at).toLocaleString() : ""}</div>
           <div class="info">처리 결과: ${status}</div>
         </div>
-        <div class="status ok">
-  ${status || "승인"}
-</div>
+        <div class="status ${statusClass}">${status}</div>
       </div>
     </div>`;
   }).join("");
@@ -786,14 +795,14 @@ async function deleteJob(jobId){
     <div class="card">
       <div class="worker-row">
         <div>
-          <div class="worker-name">${a.worker_name} (${a.phone || "번호없음"})</div>
-          <div class="worker-meta">${a.job_title} · GPS: ${a.gps} · ${new Date(a.created_at).toLocaleString()}</div>
+          <div class="worker-name">${a.worker_name || "이름없음"} (${a.phone || "번호없음"})</div>
+          <div class="worker-meta">${a.job_title || ""} · GPS: ${a.gps || ""} · ${a.created_at ? new Date(a.created_at).toLocaleString() : ""}</div>
         </div>
         <div class="status ok">출근</div>
       </div>
     </div>`).join("");
 
-  document.getElementById("workersList").innerHTML=
+  workersList.innerHTML=
     `
       <div class="section">지원 대기</div>
       ${pendingRows || `<div class="card"><div class="sub">대기중인 지원자가 없습니다.</div></div>`}
@@ -1125,119 +1134,95 @@ if(window.caches){
   caches.keys().then(keys=>keys.forEach(key=>caches.delete(key)));
 }
 
-function markApplicationLocal(id, jobId, phone, status){
-  const cleanId = id === undefined || id === null ? "" : String(id).trim();
-  const cleanJobId = jobId === undefined || jobId === null ? "" : String(jobId).trim();
-  const cleanPhone = phone === undefined || phone === null ? "" : String(phone).trim();
+function parseAppRef(ref){
+  try{
+    return JSON.parse(decodeURIComponent(ref || ""));
+  }catch(e){
+    return {id:"",job_id:"",phone:""};
+  }
+}
 
-  let changed = false;
+function sameApplication(a, target){
+  const id=String(target.id || "").trim();
+  const jobId=String(target.job_id || "").trim();
+  const phone=String(target.phone || "").trim();
 
-  applications = applications.map(a=>{
-    const sameId = cleanId && String(a.id) === cleanId;
-    const sameJobPhone =
-      cleanJobId &&
-      cleanPhone &&
-      String(a.job_id) === cleanJobId &&
-      String(a.phone || "") === cleanPhone;
+  const sameId=id && String(a.id)===id;
+  const sameJobPhone=
+    jobId &&
+    phone &&
+    String(a.job_id)===jobId &&
+    String(a.phone || "")===phone;
 
-    if(sameId || sameJobPhone){
-      changed = true;
-      return {...a, status:status};
+  return !!(sameId || sameJobPhone);
+}
+
+async function saveApplicationStatus(target,status){
+  const id=String(target.id || "").trim();
+  const jobId=String(target.job_id || "").trim();
+  const phone=String(target.phone || "").trim();
+
+  let lastError=null;
+
+  if(id){
+    const r1=await db.from("applications").update({status}).eq("id",id);
+    if(r1.error)lastError=r1.error;
+  }
+
+  if(jobId && phone){
+    const r2=await db.from("applications").update({status}).eq("job_id",jobId).eq("phone",phone);
+    if(r2.error)lastError=r2.error;
+  }
+
+  if(lastError){
+    alert(status+" 저장 오류: "+lastError.message);
+    return false;
+  }
+
+  return true;
+}
+
+async function changeApplicationStatusByRef(ref,status){
+  const target=parseAppRef(ref);
+
+  let found=false;
+  applications=applications.map(a=>{
+    if(sameApplication(a,target)){
+      found=true;
+      return {...a,status};
     }
-
     return a;
   });
 
-  return changed;
-}
-
-async function saveApplicationStatusToDB(id, jobId, phone, status){
-  const cleanId = id === undefined || id === null ? "" : String(id).trim();
-  const cleanJobId = jobId === undefined || jobId === null ? "" : String(jobId).trim();
-  const cleanPhone = phone === undefined || phone === null ? "" : String(phone).trim();
-
-  let result = null;
-
-  if(cleanId){
-    result = await db
-      .from("applications")
-      .update({status:status})
-      .eq("id",cleanId);
-
-    if(!result.error){
-      return true;
-    }
-  }
-
-  if(cleanJobId && cleanPhone){
-    result = await db
-      .from("applications")
-      .update({status:status})
-      .eq("job_id",cleanJobId)
-      .eq("phone",cleanPhone);
-
-    if(!result.error){
-      return true;
-    }
-  }
-
-  if(result && result.error){
-    alert(status + " 저장 오류: " + result.error.message);
-  }else{
-    alert(status + " 저장 오류: 지원 기록을 찾지 못했습니다.");
-  }
-
-  return false;
-}
-
-async function updateApplicationStatus(id, jobId, phone, status){
-  const localChanged = markApplicationLocal(id, jobId, phone, status);
-
-  if(!localChanged){
-    alert("화면의 지원 기록을 찾지 못했습니다. 새로고침 후 다시 시도하세요.");
+  if(!found){
+    alert("지원 기록을 화면에서 찾지 못했습니다. 새로고침 후 다시 시도하세요.");
     return;
   }
 
   renderManager();
 
-  const saved = await saveApplicationStatusToDB(id, jobId, phone, status);
+  const saved=await saveApplicationStatus(target,status);
 
   if(saved){
+    alert(status+" 완료");
     await loadData();
     renderManager();
-    alert(status + " 완료");
   }
 }
 
-async function approveApplication(id, jobId, phone){
-  await updateApplicationStatus(id, jobId, phone, "승인");
-}
-
-async function rejectApplication(id, jobId, phone){
-  await updateApplicationStatus(id, jobId, phone, "거절");
-}
-
-document.addEventListener("click", async function(e){
-  const approveBtn = e.target.closest(".approve-btn");
-  const rejectBtn = e.target.closest(".reject-btn");
+document.addEventListener("click",async function(e){
+  const approveBtn=e.target.closest(".approve-btn");
+  const rejectBtn=e.target.closest(".reject-btn");
 
   if(approveBtn){
     e.preventDefault();
-    await approveApplication(
-      approveBtn.dataset.id,
-      approveBtn.dataset.jobId,
-      approveBtn.dataset.phone
-    );
+    await changeApplicationStatusByRef(approveBtn.dataset.ref,"승인");
     return;
   }
 
   if(rejectBtn){
     e.preventDefault();
-    await rejectApplication(
-      rejectBtn.dataset.id,
-      rejectBtn.dataset.jobId,
-      rejectBtn.dataset.phone
-    );
+    await changeApplicationStatusByRef(rejectBtn.dataset.ref,"거절");
     return;
   }
 });
