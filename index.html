@@ -273,9 +273,20 @@ function selectRole(selected){
     }else{
       goScreen("workerScreen");
     }
-  }else if(selected==="manager"){
-    goScreen("managerScreen");
-  }else{
+ }else if(selected==="manager"){
+
+  const code=prompt("업체 코드를 입력하세요");
+
+  if(!code){
+    alert("업체 코드가 필요합니다.");
+    return;
+  }
+
+  companyId=code;
+  localStorage.setItem("company_id",code);
+
+  goScreen("managerScreen");
+}else{
     const password=prompt("MASTER 비밀번호 입력");
 
     if(password!==MASTER_PASSWORD){
