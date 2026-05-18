@@ -541,6 +541,10 @@ function renderPayroll(){
 async function refreshData(){await loadData();alert("새로고침 완료")}
 function goHome(){goScreen(lastRole==="manager"?"managerScreen":"workerScreen")}
 function goRoleHome(){
+  role="";
+  localStorage.removeItem("crew_role");
+  goScreen("roleScreen");
+}
 
   if(role==="manager"){
     goScreen("managerScreen");
