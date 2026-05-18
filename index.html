@@ -77,8 +77,22 @@ button:active{
 }
 .blue{background:#2563eb}.green{background:#059669}.gray{background:#334155}.red{background:#dc2626}
 .big{min-height:78px;font-size:18px;width:100%;margin-bottom:12px}
-.action{min-height:96px;background:#0f172a;border:1px solid #1e293b;display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center}
-.action .emoji{font-size:26px}
+.action{
+  min-height:108px;
+  background:linear-gradient(180deg,#0f172a 0%,#111827 100%);
+  border:1px solid rgba(255,255,255,.05);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  align-items:center;
+  justify-content:center;
+  border-radius:28px;
+  box-shadow:0 10px 26px rgba(0,0,0,.22);
+}
+.action .emoji{
+  font-size:32px;
+  filter:drop-shadow(0 4px 10px rgba(59,130,246,.25));
+}
 .section{
   font-size:22px;
   font-weight:900;
