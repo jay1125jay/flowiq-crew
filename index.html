@@ -731,22 +731,26 @@ async function deleteJob(jobId){
   }
 
   const appRows=filteredApplications.map(a=>{
-    const job=jobs.find(j=>Number(j.id)===Number(a.job_id));
-    return `
-    <div class="card">
-      <div class="worker-row">
-        <div>
-          <div class="worker-name">${a.worker_name} (${a.phone || "번호없음"})</div>
-          <div class="worker-meta">지원 공고: ${job?job.title:'삭제된 공고'} · ${new Date(a.created_at).toLocaleString()}</div>
-          <div class="info">상태: ${a.status || "지원"}</div>
+  const job=jobs.find(j=>Number(j.id)===Number(a.job_id));
+
+  return `
+  <div class="card">
+    <div class="worker-row">
+      <div>
+        <div class="worker-name">${a.worker_name} (${a.phone || "번호없음"})</div>
+        <div class="worker-meta">
+          지원 공고: ${job?job.title:'삭제된 공고'} · ${new Date(a.created_at).toLocaleString()}
         </div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-  <button class="blue" onclick="approveApplication(${a.id})">승인</button>
-  <button class="red" onclick="rejectApplication(${a.id})">거절</button>
-</div>
+        <div class="info">상태: ${a.status || "지원"}</div>
       </div>
-    </div>`;
-  }).join("");
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button class="blue" onclick="approveApplication(${a.id})">승인</button>
+        <button class="red" onclick="rejectApplication(${a.id})">거절</button>
+      </div>
+    </div>
+  </div>`;
+}).join("");
 
   const attRows=filteredAttendance.map(a=>`
     <div class="card">
