@@ -604,8 +604,11 @@ async function seedJobsIfEmpty(){
 function renderJobs(){
   const el=document.getElementById("jobsList");
   if(!el)return;
-
-  el.innerHTML=jobs.length?jobs.map(j=>{
+const filteredJobs =
+  role==="master"
+    ? jobs
+    : jobs.filter(j=>j.company_id===companyId);
+  el.innerHTML=filteredJobs.length?filteredJobs.map(j=>{
     const already=applications.some(a=>Number(a.job_id)===Number(j.id));
     return `
     <div class="card">
