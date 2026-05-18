@@ -285,7 +285,7 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
 
 <div class="top-actions hidden" id="topActions">
   <button class="gray" onclick="history.back()">← 뒤로</button>
-  <button class="gray" onclick="goRoleHome()">홈</button>
+  <button class="gray" onclick="goRoleSelect()">홈</button>
   <button class="red" onclick="refreshData()">새로고침</button>
 </div>
 
@@ -899,6 +899,9 @@ function renderPayroll(){
 
 async function refreshData(){await loadData();alert("새로고침 완료")}
 function goHome(){goScreen((role==="manager"||role==="master")?"managerScreen":"workerScreen")}
+ function goRoleSelect(){
+  goScreen("roleScreen");
+} 
 function goRoleHome(){
   goScreen("roleScreen");
 }
