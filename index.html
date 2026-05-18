@@ -350,7 +350,32 @@ function renderJobs(){
   }).join(""):`<div class="card"><div class="title">공고가 없습니다</div><div class="sub">관리자 앱에서 공고를 생성하세요.</div></div>`;
 }
 
-async function applyJob}(jobId){(jobId){
+async function applyJob(jobId){
+  if(applications.some(a=>Number(a.job_id)===Number(jobId))){
+    return alert("이미 지원한 공고입니다.");
+  }
+
+  const {error}=await db.from("applications").insert({
+    job_id:jobId,
+    worker_name:workerName || "이름없음",
+    phone:workerPhone || "번호없음",
+    status:"지원"
+  });
+
+  if(error){
+    return alert("지원 저장 오류: "+error.message);
+  }
+
+  const job=jobs.find(j=>Number(j.id)===Number(jobId));
+  if(job){
+    await db.from("jobs").update({applied:(job.applied||0)+1}).eq("id",jobId);
+  }
+
+  await loadData();
+  alert("지원 완료!");
+}
+
+async function deleteJob(jobId){
   if(!confirm("이 공고를 삭제할까요?")){
     return;
   }
@@ -364,42 +389,7 @@ async function applyJob}(jobId){(jobId){
 
   await loadData();
   alert("공고가 삭제되었습니다.");
-
-  if(applications.some(a=>Number(a.job_id)===Number(jobId)))return alert("이미 지원한 공고입니다.");
-
-  const {error}=await db.from("applications").insert({
-    job_id:jobId,
-    worker_name:workerName || "이름없음",
-phone:workerPhone || "번호없음",
-    status:"지원"
-  });
-
-  if(error)return alert("지원 저장 오류: "+error.message);
-
-  const job=jobs.find(j=>Number(j.id)===Number(jobId));
-  if(job)await db.from("jobs").update({applied:(job.applied||0)+1}).eq("id",jobId);
-
-  await loadData();
-  alert("지원 완료!");
 }
-async function deleteJob(jobId){
-
-  if(!confirm("이 공고를 삭제할까요?")){
-    return;
-  }
-
-  const {error}=await db.from("jobs").delete().eq("id",jobId);
-
-  if(error){
-    alert("삭제 오류: " + error.message);
-    return;
-  }
-
-  await loadData();
-
-  alert("공고가 삭제되었습니다.");
-}
-function renderManager(){
   if(!document.getElementById("mChecked"))return;
 
   document.getElementById("mChecked").innerText=attendance.length;
