@@ -41,9 +41,28 @@ button{border:0;color:white;background:#1e293b;border-radius:22px;min-height:56p
 .worker-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .worker-name{font-weight:800}
 .worker-meta{color:#94a3b8;font-size:13px;margin-top:4px}
-.status{padding:7px 10px;border-radius:12px;font-size:13px;font-weight:800}
-.ok{background:rgba(16,185,129,.16);color:#6ee7b7}
-.wait{background:rgba(59,130,246,.16);color:#93c5fd}
+.status{
+  width:78px;
+  height:78px;
+  border-radius:22px;
+  font-size:20px;
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:6px;
+}
+
+.ok{
+  background:rgba(37,99,235,.22);
+  color:#60a5fa;
+}
+
+.wait{
+  background:rgba(59,130,246,.16);
+  color:#93c5fd;
+}
 .notice{background:rgba(37,99,235,.13);border:1px solid rgba(59,130,246,.25)}
 .hidden{display:none}
 .back{width:100%;margin-top:12px;background:#334155}
