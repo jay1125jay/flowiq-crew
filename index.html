@@ -540,7 +540,26 @@ function renderPayroll(){
 
 async function refreshData(){await loadData();alert("새로고침 완료")}
 function goHome(){goScreen(lastRole==="manager"?"managerScreen":"workerScreen")}
-function goRoleHome(){if(role==="manager")goScreen("managerScreen");else if(role==="worker")goScreen("workerScreen");else goScreen("roleScreen")}
+function goRoleHome(){
+
+  if(role==="manager"){
+    goScreen("managerScreen");
+    return;
+  }
+
+  if(role==="worker"){
+
+    if(!workerName || !workerPhone){
+      goScreen("workerInfoScreen");
+    }else{
+      goScreen("workerScreen");
+    }
+
+    return;
+  }
+
+  goScreen("roleScreen");
+}
 function navPrimary(){if(role==="manager")goScreen("jobFormScreen");else goScreen("workerScreen")}
 function navSecondary(){if(role==="manager")goScreen("managerScreen");else showPayroll()}
 
