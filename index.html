@@ -765,7 +765,7 @@ async function deleteJob(jobId){
 
   const processedRows=processedApplications.map(a=>{
     const job=jobs.find(j=>Number(j.id)===Number(a.job_id));
-    const status=a.status || "지원";
+    const status=(a.status || "").trim();
 
     return `
     <div class="card">
@@ -775,7 +775,9 @@ async function deleteJob(jobId){
           <div class="worker-meta">지원 공고: ${job?job.title:'삭제된 공고'} · ${new Date(a.created_at).toLocaleString()}</div>
           <div class="info">처리 결과: ${status}</div>
         </div>
-        <div class="status ${status==="승인" || status==="출근완료" ? "ok" : "wait"}">${status}</div>
+        <div class="status ok">
+  ${status || "승인"}
+</div>
       </div>
     </div>`;
   }).join("");
