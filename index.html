@@ -858,7 +858,13 @@ function navPrimary(){
     goScreen("workerScreen");
   }
 }
-function navSecondary(){if(role==="manager")goScreen("managerScreen");else showPayroll()}
+function navSecondary(){
+  if(role==="manager" || role==="master"){
+    goScreen("managerScreen");
+  }else{
+    showPayroll();
+  }
+}
 
 function updateNav(){
 
