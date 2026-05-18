@@ -269,6 +269,7 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   border:1px solid rgba(255,255,255,.05);
   box-shadow:0 6px 18px rgba(0,0,0,.18);
 }
+#languageGrid button{background:linear-gradient(180deg,#0f172a 0%,#111827 100%);border:1px solid rgba(255,255,255,.05);}
 </style>
 </head>
 
@@ -303,7 +304,7 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   </div>
   <button class="big blue" onclick="selectRole('worker')">👷 근로자 앱</button>
 
-<button class="big green" onclick="selectRole('manager')">🏗️ 현장 관리자</button>
+<button class="big green" onclick="selectRole('manager')">🏗️ 업체 관리자</button>
 
 <button class="big red" onclick="selectRole('master')">🛡️ FlowIQ MASTER</button>
 </section>
@@ -490,47 +491,62 @@ async function selectRole(selected){
   role=selected;
   lastRole=selected;
 
-  localStorage.setItem("crew_role",selected);
-
   if(selected==="worker"){
+    localStorage.setItem("crew_role","worker");
+
     if(!workerName || !workerPhone){
       goScreen("workerInfoScreen");
     }else{
+      await loadData();
       goScreen("workerScreen");
     }
-}else if(selected==="manager"){
 
-  const code=prompt("업체 코드를 입력하세요");
+  }else if(selected==="manager"){
+    const code=prompt("업체 코드를 입력하세요");
 
-  if(!code){
-    alert("업체 코드가 필요합니다.");
-    return;
-  }
+    if(!code){
+      alert("업체 코드가 필요합니다.");
+      return;
+    }
 
-  if(!COMPANY_PASSWORDS[code]){
-    alert("존재하지 않는 업체 코드입니다.");
-    return;
-  }
+    if(!COMPANY_PASSWORDS[code]){
+      alert("존재하지 않는 업체 코드입니다.");
+      return;
+    }
 
-  const password=prompt("업체 비밀번호 입력");
+    const password=prompt("업체 비밀번호 입력");
 
-  if(password!==COMPANY_PASSWORDS[code]){
-    alert("비밀번호가 틀렸습니다.");
-    return;
-  }
+    if(password!==COMPANY_PASSWORDS[code]){
+      alert("비밀번호가 틀렸습니다.");
+      return;
+    }
 
-  role="manager";
-  lastRole="manager";
-  companyId=code;
+    role="manager";
+    lastRole="manager";
+    companyId=code;
 
-  localStorage.setItem("crew_role","manager");
-  localStorage.setItem("company_id",code);
+    localStorage.setItem("crew_role","manager");
+    localStorage.setItem("company_id",code);
 
-  await loadData();
+    await loadData();
+    goScreen("managerScreen");
 
-  goScreen("managerScreen");
-} 
-alert("MASTER MODE");
+  }else if(selected==="master"){
+    const password=prompt("MASTER 비밀번호 입력");
+
+    if(password!==MASTER_PASSWORD){
+      alert("비밀번호가 틀렸습니다.");
+      return;
+    }
+
+    role="master";
+    lastRole="master";
+    companyId="master";
+
+    localStorage.setItem("crew_role","master");
+
+    await loadData();
+    goScreen("managerScreen");
     alert("MASTER MODE");
   }
 }
@@ -554,26 +570,18 @@ function saveWorkerInfo(){
 }
   async function loadData(){
   let jobsQuery=db.from("jobs").select("*");
-
-if(role!=="master"){
-  jobsQuery=jobsQuery.eq("company_id",companyId);
-}
-
-const jr=await jobsQuery.order("created_at",{ascending:false});
   let applicationsQuery=db.from("applications").select("*");
-
-if(role!=="master"){
-  applicationsQuery=applicationsQuery.eq("company_id",companyId);
-}
-
-const ar=await applicationsQuery.order("created_at",{ascending:false});
   let attendanceQuery=db.from("attendance").select("*");
 
-if(role!=="master"){
-  attendanceQuery=attendanceQuery.eq("company_id",companyId);
-}
+  if(role!=="master"){
+    jobsQuery=jobsQuery.eq("company_id",companyId);
+    applicationsQuery=applicationsQuery.eq("company_id",companyId);
+    attendanceQuery=attendanceQuery.eq("company_id",companyId);
+  }
 
-const tr=await attendanceQuery.order("created_at",{ascending:false});
+  const jr=await jobsQuery.order("created_at",{ascending:false});
+  const ar=await applicationsQuery.order("created_at",{ascending:false});
+  const tr=await attendanceQuery.order("created_at",{ascending:false});
 
   if(jr.error)alert("jobs 오류: "+jr.error.message);
   if(ar.error)alert("applications 오류: "+ar.error.message);
@@ -593,9 +601,9 @@ async function seedJobsIfEmpty(){
   if(jobs.length>0)return;
 
   await db.from("jobs").insert([
-    {title:"성수 물류센터 상하차",location:"서울 성동구 성수동",work_time:"08:00 - 18:00",salary:150000,needed:8,applied:5,language:"한국어 / Монгол / English",type:"물류"},
-    {title:"하남 공장 포장 보조",location:"경기 하남시",work_time:"09:00 - 17:00",salary:120000,needed:6,applied:3,language:"한국어 / Tiếng Việt",type:"공장"},
-    {title:"판교 현장 자재 정리",location:"경기 성남시 분당구",work_time:"07:00 - 16:00",salary:160000,needed:10,applied:7,language:"한국어 / Русский / Oʻzbek",type:"건설"}
+    {title:"성수 물류센터 상하차",location:"서울 성동구 성수동",work_time:"08:00 - 18:00",salary:150000,needed:8,applied:5,language:"한국어 / Монгол / English",type:"물류",company_id:"demo_company"},
+    {title:"하남 공장 포장 보조",location:"경기 하남시",work_time:"09:00 - 17:00",salary:120000,needed:6,applied:3,language:"한국어 / Tiếng Việt",type:"공장",company_id:"demo_company"},
+    {title:"판교 현장 자재 정리",location:"경기 성남시 분당구",work_time:"07:00 - 16:00",salary:160000,needed:10,applied:7,language:"한국어 / Русский / Oʻzbek",type:"건설",company_id:"demo_company"}
   ]);
 
   await loadData();
@@ -604,12 +612,15 @@ async function seedJobsIfEmpty(){
 function renderJobs(){
   const el=document.getElementById("jobsList");
   if(!el)return;
-const filteredJobs =
-  role==="master"
+
+  const filteredJobs = role==="master"
     ? jobs
     : jobs.filter(j=>j.company_id===companyId);
-  el.innerHTML=filteredJobs.length?filteredJobs.map(j=>{
+
+  el.innerHTML=filteredJobs.length
+  ? filteredJobs.map(j=>{
     const already=applications.some(a=>Number(a.job_id)===Number(j.id));
+
     return `
     <div class="card">
       <div class="job-head">
@@ -623,16 +634,21 @@ const filteredJobs =
       <div class="info">🕒 ${j.work_time}</div>
       <div class="info">👥 ${j.applied||0}/${j.needed}명 지원</div>
       <div class="info">🌐 ${j.language}</div>
-     ${role==="worker"
-  ? `<button class="full ${already?'gray':'blue'}"
-onclick="applyJob(${j.id})">
-${already?'지원 완료':'지원하기'}
-</button>`
-  : ""
-}
-  ${role==="master"?'<button class="full red" onclick="deleteJob('+j.id+')">삭제하기</button>':''}
+
+      ${role==="worker"
+        ? `<button class="full ${already?'gray':'blue'}" onclick="applyJob(${j.id})">
+            ${already?'지원 완료':'지원하기'}
+          </button>`
+        : ""
+      }
+
+      ${role==="master"
+        ? `<button class="full red" onclick="deleteJob(${j.id})">삭제하기</button>`
+        : ""
+      }
     </div>`;
-  }).join(""):`<div class="card"><div class="title">공고가 없습니다</div><div class="sub">관리자 앱에서 공고를 생성하세요.</div></div>`;
+  }).join("")
+  : `<div class="card"><div class="title">공고가 없습니다</div><div class="sub">관리자 앱에서 공고를 생성하세요.</div></div>`;
 }
 
 async function applyJob(jobId){
@@ -864,11 +880,9 @@ function renderPayroll(){
 }
 
 async function refreshData(){await loadData();alert("새로고침 완료")}
-function goHome(){goScreen(lastRole==="manager"?"managerScreen":"workerScreen")}
+function goHome(){goScreen((role==="manager"||role==="master")?"managerScreen":"workerScreen")}
 function goRoleHome(){goScreen("roleScreen")}
-function navPrimary(){
-  goScreen("workerScreen");
-}
+function navPrimary(){goScreen("workerScreen")}
 function navSecondary(){
   if(role==="manager" || role==="master"){
     goScreen("managerScreen");
@@ -922,15 +936,18 @@ async function init(){
   await seedJobsIfEmpty();
 
   const savedLanguage=localStorage.getItem("crew_language");
+
   if(savedLanguage&&role){
-  if(role==="manager" || role==="master"){
-    show("managerScreen",false);
+    if(role==="manager" || role==="master"){
+      show("managerScreen",false);
+    }else{
+      show("workerScreen",false);
+    }
+  }else if(savedLanguage){
+    show("roleScreen",false);
   }else{
-    show("workerScreen",false);
+    show("languageScreen",false);
   }
-}
-  else if(savedLanguage)show("roleScreen",false);
-  else show("languageScreen",false);
 
   history.replaceState({screen:currentScreen},"","#"+currentScreen);
   await autoCheckIn();
