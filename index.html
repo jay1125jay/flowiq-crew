@@ -857,11 +857,7 @@ async function refreshData(){await loadData();alert("새로고침 완료")}
 function goHome(){goScreen(lastRole==="manager"?"managerScreen":"workerScreen")}
 function goRoleHome(){goScreen("roleScreen")}
 function navPrimary(){
-  if(role==="manager" || role==="master"){
-    goScreen("managerScreen");
-  }else{
-    goScreen("workerScreen");
-  }
+  goScreen("workerScreen");
 }
 function navSecondary(){
   if(role==="manager" || role==="master"){
