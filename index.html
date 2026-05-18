@@ -379,7 +379,7 @@ function renderManager(){
     <div class="card">
       <div class="worker-row">
         <div>
-          <div class="worker-name">${a.worker_name}</div>
+          <div class="worker-name">${a.worker_name} (${a.phone || "번호없음"})</div>
           <div class="worker-meta">지원 공고: ${job?job.title:'삭제된 공고'} · ${new Date(a.created_at).toLocaleString()}</div>
         </div>
         <div class="status wait">지원</div>
@@ -391,7 +391,7 @@ function renderManager(){
     <div class="card">
       <div class="worker-row">
         <div>
-          <div class="worker-name">${a.worker_name}</div>
+          <div class="worker-name">${a.worker_name} (${a.phone || "번호없음"})</div>
           <div class="worker-meta">${a.job_title} · GPS: ${a.gps} · ${new Date(a.created_at).toLocaleString()}</div>
         </div>
         <div class="status ok">출근</div>
