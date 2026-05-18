@@ -273,8 +273,11 @@ function selectRole(selected){
     }else{
       goScreen("workerScreen");
     }
+    }else if(selected==="manager"){
+    goScreen("managerScreen");
   }else{
     goScreen("managerScreen");
+    alert("MASTER MODE");
   }
 }
 
