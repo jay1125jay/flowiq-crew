@@ -176,26 +176,35 @@ button:active{
 .worker-name{font-weight:800}
 .worker-meta{color:#94a3b8;font-size:13px;margin-top:4px}
 .status{
-  width:78px;
-  height:78px;
+  min-width:96px;
+  min-height:78px;
+  padding:10px 12px;
   border-radius:22px;
-  font-size:20px;
-  font-weight:800;
+  font-size:16px;
+  line-height:1.25;
+  font-weight:900;
   display:flex;
   align-items:center;
   justify-content:center;
+  text-align:center;
+  white-space:normal;
+  word-break:keep-all;
   flex-direction:column;
   gap:6px;
 }
 
 .ok{
-  background:rgba(37,99,235,.22);
-  color:#60a5fa;
+  background:linear-gradient(135deg,rgba(16,185,129,.22),rgba(5,150,105,.18));
+  color:#34d399;
+  border:1px solid rgba(52,211,153,.22);
+  box-shadow:0 8px 24px rgba(16,185,129,.12);
 }
 
 .wait{
-  background:rgba(59,130,246,.16);
-  color:#93c5fd;
+  background:linear-gradient(135deg,rgba(239,68,68,.18),rgba(220,38,38,.14));
+  color:#fca5a5;
+  border:1px solid rgba(252,165,165,.18);
+  box-shadow:0 8px 24px rgba(239,68,68,.10);
 }
 .notice{
   background:linear-gradient(135deg,rgba(37,99,235,.18),rgba(59,130,246,.08));
@@ -452,7 +461,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v4.1 approve-index-final';
+let APP_VERSION='FlowIQ Crew v4.3 status-color-upgrade';
   
 const MASTER_PASSWORD="1234";
 const COMPANY_PASSWORDS={
@@ -745,9 +754,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v4.1";
+      (COMPANY_NAMES[companyId] || companyId) + " · v4.3";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v4.1";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v4.3";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -773,6 +782,19 @@ async function deleteJob(jobId){
   const processedRows=processedApplications.map(a=>{
     const job=jobs.find(j=>Number(j.id)===Number(a.job_id));
     const status=getStatus(a);
+    let displayStatus=status;
+
+    if(status==="출근완료"){
+      displayStatus="출근 완료";
+    }
+
+    if(status==="승인"){
+      displayStatus="승인 완료";
+    }
+
+    if(status==="거절"){
+      displayStatus="거절";
+    }
     const statusClass=(status==="승인" || status==="출근완료") ? "ok" : "wait";
 
     return `
@@ -781,9 +803,9 @@ async function deleteJob(jobId){
         <div>
           <div class="worker-name">${a.worker_name || "이름없음"} (${a.phone || "번호없음"})</div>
           <div class="worker-meta">지원 공고: ${job?job.title:"삭제된 공고"} · ${a.created_at ? new Date(a.created_at).toLocaleString() : ""}</div>
-          <div class="info">처리 결과: ${status}</div>
+          <div class="info">처리 결과: ${displayStatus}</div>
         </div>
-        <div class="status ${statusClass}">${status}</div>
+        <div class="status ${statusClass}">${displayStatus}</div>
       </div>
     </div>`;
   }).join("");
@@ -795,7 +817,7 @@ async function deleteJob(jobId){
           <div class="worker-name">${a.worker_name || "이름없음"} (${a.phone || "번호없음"})</div>
           <div class="worker-meta">${a.job_title || ""} · GPS: ${a.gps || ""} · ${a.created_at ? new Date(a.created_at).toLocaleString() : ""}</div>
         </div>
-        <div class="status ok">출근</div>
+        <div class="status ok">출근 완료</div>
       </div>
     </div>`).join("");
 
