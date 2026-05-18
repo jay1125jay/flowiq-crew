@@ -321,7 +321,13 @@ function saveWorkerInfo(){
   goScreen("workerScreen");
 }
   async function loadData(){
-  const jr=await db.from("jobs").select("*").order("created_at",{ascending:false});
+  let jobsQuery=db.from("jobs").select("*");
+
+if(role!=="master"){
+  jobsQuery=jobsQuery.eq("company_id",companyId);
+}
+
+const jr=await jobsQuery.order("created_at",{ascending:false});
   const ar=await db.from("applications").select("*").order("created_at",{ascending:false});
   const tr=await db.from("attendance").select("*").order("created_at",{ascending:false});
 
