@@ -578,7 +578,13 @@ if(role!=="master"){
 }
 
 const ar=await applicationsQuery.order("created_at",{ascending:false});
-  const tr=await db.from("attendance").select("*").order("created_at",{ascending:false});
+  let attendanceQuery=db.from("attendance").select("*");
+
+if(role!=="master"){
+  attendanceQuery=attendanceQuery.eq("company_id",companyId);
+}
+
+const tr=await attendanceQuery.order("created_at",{ascending:false});
 
   if(jr.error)alert("jobs 오류: "+jr.error.message);
   if(ar.error)alert("applications 오류: "+ar.error.message);
