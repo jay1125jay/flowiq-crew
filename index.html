@@ -390,6 +390,8 @@ async function deleteJob(jobId){
   await loadData();
   alert("공고가 삭제되었습니다.");
 }
+
+function renderManager(){
   if(!document.getElementById("mChecked"))return;
 
   document.getElementById("mChecked").innerText=attendance.length;
@@ -423,8 +425,6 @@ async function deleteJob(jobId){
 
   document.getElementById("workersList").innerHTML=(attRows+appRows)||`<div class="card"><div class="sub">아직 지원/출근 기록이 없습니다.</div></div>`;
 }
-
-async function createJob(){
   const title=fTitle.value.trim();
   const location=fLocation.value.trim();
   const work_time=fTime.value.trim();
