@@ -455,7 +455,11 @@ let applications=[];
 let attendance=[];
   
 const MASTER_PASSWORD="1234";
-const COMPANY_PASSWORD="1111";
+const COMPANY_PASSWORDS={
+  demo_company:"0000",
+  alpha:"1111",
+  beta:"2222"
+};
   
 let companyId=localStorage.getItem("company_id")||"demo_company";
 const screens=["languageScreen","roleScreen","workerInfoScreen","workerScreen","managerScreen","jobFormScreen","payrollScreen","qrScreen"];
