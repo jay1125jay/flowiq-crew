@@ -30,7 +30,22 @@ body{display:flex;justify-content:center}
 .sub{color:#94a3b8;font-size:14px;line-height:1.45}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-button{border:0;color:white;background:#1e293b;border-radius:22px;min-height:56px;font-size:16px;font-weight:700;cursor:pointer}
+button{
+  border:0;
+  color:white;
+  background:#1e293b;
+  border-radius:24px;
+  min-height:58px;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+  transition:.18s ease;
+  box-shadow:0 6px 20px rgba(0,0,0,.22);
+}
+
+button:active{
+  transform:scale(.98);
+}
 .blue{background:#2563eb}.green{background:#059669}.gray{background:#334155}.red{background:#dc2626}
 .big{min-height:78px;font-size:18px;width:100%;margin-bottom:12px}
 .action{min-height:96px;background:#0f172a;border:1px solid #1e293b;display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center}
