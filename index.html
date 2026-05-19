@@ -541,6 +541,35 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   border-radius:18px;
 }
 
+
+.notice-center{
+  background:linear-gradient(180deg,rgba(15,23,42,.96),rgba(17,24,39,.96));
+  border:1px solid rgba(96,165,250,.18);
+  border-radius:26px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.notice-item{
+  background:rgba(15,23,42,.72);
+  border:1px solid rgba(148,163,184,.10);
+  border-radius:18px;
+  padding:12px;
+  margin-top:10px;
+  font-size:13px;
+}
+.translate-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 12px;
+  border-radius:999px;
+  background:rgba(59,130,246,.16);
+  color:#bfdbfe;
+  font-size:12px;
+  font-weight:800;
+  margin-top:10px;
+}
+
 </style>
 </head>
 
@@ -738,7 +767,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v5.6 operations-automation-upgrade';
+let APP_VERSION='FlowIQ Crew v5.7 worker-notice-center';
   
 const MASTER_PASSWORD="1234";
 const COMPANY_PASSWORDS={
@@ -1027,6 +1056,22 @@ function renderWorkerHome(){
       </div>
     </div>
 
+    <div class="notice-center">
+      <div class="title">🔔 실시간 안내</div>
+
+      <div class="notice-item">
+        관리자 승인 후 QR 출근이 가능합니다.
+      </div>
+
+      <div class="notice-item">
+        길찾기 버튼으로 현장 이동 가능
+      </div>
+
+      <div class="translate-pill">
+        🌐 다국어 지원 준비 완료
+      </div>
+    </div>
+
     <div class="today-site-card">
       <div class="sub">출근 흐름</div>
       <div class="info">지원 → 승인 → 길찾기 → QR 출근 → 급여 확인</div>
@@ -1170,9 +1215,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v5.6";
+      (COMPANY_NAMES[companyId] || companyId) + " · v5.7";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.6";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.7";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
