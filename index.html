@@ -762,6 +762,33 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   font-weight:900;
 }
 
+
+.multi-language-board{
+  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(17,24,39,.98));
+  border:1px solid rgba(96,165,250,.18);
+  border-radius:28px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.lang-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0;
+  border-top:1px solid rgba(148,163,184,.08);
+}
+.lang-row:first-child{
+  border-top:none;
+}
+.lang-badge{
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(59,130,246,.16);
+  color:#bfdbfe;
+  font-size:11px;
+  font-weight:900;
+}
+
 </style>
 </head>
 
@@ -959,7 +986,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v6.3 worker-rank-system';
+let APP_VERSION='FlowIQ Crew v6.4 multilingual-status';
 let managerFilter='all';
 let managerSearch='';
   
@@ -1250,6 +1277,25 @@ function renderWorkerHome(){
       </div>
     </div>
 
+    <div class="multi-language-board">
+      <div class="title">🌐 다국어 지원 상태</div>
+
+      <div class="lang-row">
+        <div class="sub">한국어</div>
+        <div class="lang-badge">ACTIVE</div>
+      </div>
+
+      <div class="lang-row">
+        <div class="sub">English</div>
+        <div class="lang-badge">READY</div>
+      </div>
+
+      <div class="lang-row">
+        <div class="sub">Монгол / Việt / ไทย</div>
+        <div class="lang-badge">PREP</div>
+      </div>
+    </div>
+
     <div class="worker-rank-board">
       <div class="title">🏅 근무 활동 상태</div>
 
@@ -1495,9 +1541,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v6.3";
+      (COMPANY_NAMES[companyId] || companyId) + " · v6.4";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v6.3";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v6.4";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
