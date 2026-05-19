@@ -870,6 +870,33 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   font-weight:900;
 }
 
+
+.ai-worker-match-board{
+  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(17,24,39,.98));
+  border:1px solid rgba(236,72,153,.18);
+  border-radius:28px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.match-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0;
+  border-top:1px solid rgba(148,163,184,.08);
+}
+.match-row:first-child{
+  border-top:none;
+}
+.match-badge{
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(236,72,153,.16);
+  color:#fbcfe8;
+  font-size:11px;
+  font-weight:900;
+}
+
 </style>
 </head>
 
@@ -1067,7 +1094,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v6.7 smart-pay-board';
+let APP_VERSION='FlowIQ Crew v6.8 ai-worker-matching';
 let managerFilter='all';
 let managerSearch='';
   
@@ -1641,9 +1668,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v6.7";
+      (COMPANY_NAMES[companyId] || companyId) + " · v6.8";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v6.7";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v6.8";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -1824,6 +1851,25 @@ async function deleteJob(jobId){
       </div>
 
       ${dashboardCards}
+
+      <div class="ai-worker-match-board">
+        <div class="title">🧠 AI 근로자 매칭 상태</div>
+
+        <div class="match-row">
+          <div class="sub">추천 매칭 정확도</div>
+          <div class="match-badge">92%</div>
+        </div>
+
+        <div class="match-row">
+          <div class="sub">현재 추천 근로자</div>
+          <div class="match-badge">${approvedCount}명</div>
+        </div>
+
+        <div class="match-row">
+          <div class="sub">자동 매칭 시스템</div>
+          <div class="match-badge">ACTIVE</div>
+        </div>
+      </div>
 
       <div class="global-network-board">
         <div class="title">🌍 글로벌 네트워크 상태</div>
