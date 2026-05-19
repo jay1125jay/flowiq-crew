@@ -624,6 +624,29 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   color:#60a5fa;
 }
 
+
+.manager-filter{
+  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(17,24,39,.98));
+  border:1px solid rgba(148,163,184,.12);
+  border-radius:28px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.manager-filter-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+}
+.manager-filter button{
+  min-height:48px;
+  border-radius:18px;
+  font-size:13px;
+}
+.manager-filter input{
+  margin-top:12px;
+}
+
 </style>
 </head>
 
@@ -821,7 +844,9 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v5.8 live-shift-board';
+let APP_VERSION='FlowIQ Crew v5.9 manager-filter-search';
+let managerFilter='all';
+let managerSearch='';
   
 const MASTER_PASSWORD="1234";
 const COMPANY_PASSWORDS={
@@ -1281,8 +1306,37 @@ async function deleteJob(jobId){
       : attendance;
 
   const getStatus=(a)=>String(a.status || "지원").trim() || "지원";
-  const pendingApplications=filteredApplications.filter(a=>getStatus(a)==="지원");
-  const processedApplications=filteredApplications.filter(a=>getStatus(a)!=="지원");
+  const searchedApplications=filteredApplications.filter(a=>{
+    const keyword=String(managerSearch||"").trim().toLowerCase();
+
+    if(!keyword)return true;
+
+    const job=jobs.find(j=>Number(j.id)===Number(a.job_id));
+    const text=[
+      a.worker_name,
+      a.phone,
+      a.status,
+      job?job.title:"",
+      job?job.location:""
+    ].join(" ").toLowerCase();
+
+    return text.includes(keyword);
+  });
+
+  const filteredByStatus=searchedApplications.filter(a=>{
+    const status=getStatus(a);
+
+    if(managerFilter==="all")return true;
+    if(managerFilter==="pending")return status==="지원";
+    if(managerFilter==="approved")return status==="승인";
+    if(managerFilter==="rejected")return status==="거절";
+    if(managerFilter==="checked")return status==="출근완료";
+
+    return true;
+  });
+
+  const pendingApplications=filteredByStatus.filter(a=>getStatus(a)==="지원");
+  const processedApplications=filteredByStatus.filter(a=>getStatus(a)!=="지원");
 
   managerPendingApplications=pendingApplications;
 
@@ -1292,9 +1346,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v5.8";
+      (COMPANY_NAMES[companyId] || companyId) + " · v5.9";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.8";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.9";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -1458,6 +1512,20 @@ async function deleteJob(jobId){
         <div class="sub">현재 실행 버전</div>
         <div class="title">${APP_VERSION}</div>
         <div class="sub">공고 생성 → 근로자 지원 → 관리자 승인 → 출근 확인 순서로 진행됩니다.</div>
+      </div>
+
+      <div class="manager-filter">
+        <div class="title">🔎 현장 검색 / 필터</div>
+        <input placeholder="이름, 전화번호, 공고명 검색" value="${managerSearch}" oninput="setManagerSearch(this.value)" />
+
+        <div class="manager-filter-grid">
+          <button class="${managerFilter==='all'?'blue':'gray'}" onclick="setManagerFilter('all')">전체</button>
+          <button class="${managerFilter==='pending'?'blue':'gray'}" onclick="setManagerFilter('pending')">지원 대기</button>
+          <button class="${managerFilter==='approved'?'green':'gray'}" onclick="setManagerFilter('approved')">승인 완료</button>
+          <button class="${managerFilter==='checked'?'blue':'gray'}" onclick="setManagerFilter('checked')">출근 완료</button>
+          <button class="${managerFilter==='rejected'?'red':'gray'}" onclick="setManagerFilter('rejected')">거절</button>
+          <button class="gray" onclick="resetManagerFilter()">초기화</button>
+        </div>
       </div>
 
       ${dashboardCards}
@@ -1815,6 +1883,24 @@ if(window.caches){
   caches.keys().then(keys=>keys.forEach(key=>caches.delete(key)));
 }
 
+
+
+
+function setManagerFilter(value){
+  managerFilter=value;
+  renderManager();
+}
+
+function setManagerSearch(value){
+  managerSearch=value;
+  renderManager();
+}
+
+function resetManagerFilter(){
+  managerFilter="all";
+  managerSearch="";
+  renderManager();
+}
 
 
 async function quickApprove(applicationId){
