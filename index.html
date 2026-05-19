@@ -649,7 +649,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v5.3 manager-dashboard-upgrade';
+let APP_VERSION='FlowIQ Crew v5.3.1 master-login-fix';
   
 const MASTER_PASSWORD="1234";
 const COMPANY_PASSWORDS={
@@ -1074,9 +1074,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v5.3";
+      (COMPANY_NAMES[companyId] || companyId) + " · v5.3.1";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.3";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.3.1";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -1154,8 +1154,8 @@ async function deleteJob(jobId){
     </div>`).join("");
 
   const totalJobs=filteredJobs.length;
-  const pendingCount=filteredApps.filter(a=>(a.status||"지원")==="지원").length;
-  const approvedCount=filteredApps.filter(a=>(a.status||"").includes("승인")).length;
+  const pendingCount=filteredApplications.filter(a=>(a.status||"지원")==="지원").length;
+  const approvedCount=filteredApplications.filter(a=>(a.status||"").includes("승인")).length;
   const attendanceCount=filteredAttendance.length;
 
   const dashboardCards=`
