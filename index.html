@@ -508,6 +508,39 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   font-size:13px;
 }
 
+
+.urgent-banner{
+  background:linear-gradient(90deg,rgba(239,68,68,.18),rgba(245,158,11,.18));
+  border:1px solid rgba(248,113,113,.25);
+  border-radius:22px;
+  padding:16px;
+  margin-bottom:16px;
+}
+.urgent-banner .title{
+  font-size:18px;
+  font-weight:900;
+}
+.live-alert{
+  background:rgba(59,130,246,.12);
+  border:1px solid rgba(96,165,250,.20);
+  color:#bfdbfe;
+  border-radius:18px;
+  padding:12px;
+  margin-top:12px;
+  font-size:13px;
+  font-weight:700;
+}
+.fast-approve-bar{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+.fast-approve-bar button{
+  flex:1;
+  min-height:48px;
+  border-radius:18px;
+}
+
 </style>
 </head>
 
@@ -705,7 +738,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v5.5 master-delete-tools';
+let APP_VERSION='FlowIQ Crew v5.6 operations-automation-upgrade';
   
 const MASTER_PASSWORD="1234";
 const COMPANY_PASSWORDS={
@@ -1137,9 +1170,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v5.5";
+      (COMPANY_NAMES[companyId] || companyId) + " · v5.6";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.5";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.6";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -1157,6 +1190,12 @@ async function deleteJob(jobId){
         <div style="display:flex;flex-direction:column;gap:8px">
           <button type="button" class="blue approve-btn" data-index="${index}">승인</button>
           <button type="button" class="red reject-btn" data-index="${index}">거절</button>
+
+          <div class="fast-approve-bar">
+            <button type="button" class="green" onclick="quickApprove(${a.id})">빠른승인</button>
+            <button type="button" class="gray" onclick="sendWorkerNotice('${a.phone || ""}')">알림</button>
+          </div>
+
           ${role==="master" ? `<button type="button" class="gray" onclick="masterDeleteApplication(${a.id})">기록삭제</button>` : ``}
         </div>
       </div>
@@ -1300,6 +1339,15 @@ async function deleteJob(jobId){
       </div>
 
       ${dashboardCards}
+
+      <div class="urgent-banner">
+        <div class="title">🚨 긴급 운영 상태</div>
+        <div class="sub">인원 부족 현장 및 오늘 출근 예정 인원을 확인하세요.</div>
+
+        <div class="live-alert">
+          오늘 출근 예정: ${attendanceCount + approvedCount}명
+        </div>
+      </div>
 
       <div class="section">생성한 공고</div>
       ${jobRows || `<div class="card"><div class="sub">아직 생성한 공고가 없습니다.</div></div>`}
@@ -1643,6 +1691,34 @@ if("serviceWorker" in navigator){
 
 if(window.caches){
   caches.keys().then(keys=>keys.forEach(key=>caches.delete(key)));
+}
+
+
+
+async function quickApprove(applicationId){
+  const target=applications.find(a=>Number(a.id)===Number(applicationId));
+
+  if(!target){
+    alert("지원 기록을 찾을 수 없습니다.");
+    return;
+  }
+
+  const {error}=await db
+    .from("applications")
+    .update({status:"승인"})
+    .eq("id",applicationId);
+
+  if(error){
+    alert("빠른 승인 오류: "+error.message);
+    return;
+  }
+
+  await loadData();
+  alert("빠른 승인 완료");
+}
+
+function sendWorkerNotice(phone){
+  alert("📢 근로자 알림 전송 준비\\n\\n대상: "+phone+"\\n\\n향후 푸시/문자 기능과 연결 예정");
 }
 
 
