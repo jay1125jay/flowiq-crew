@@ -1059,6 +1059,38 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   font-weight:900;
 }
 
+
+.ops-timeline-board{
+  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(17,24,39,.98));
+  border:1px solid rgba(45,212,191,.18);
+  border-radius:28px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.timeline-step{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 0;
+  border-top:1px solid rgba(148,163,184,.08);
+}
+.timeline-step:first-child{border-top:none}
+.timeline-dot{
+  width:14px;
+  height:14px;
+  border-radius:999px;
+  background:#2dd4bf;
+  box-shadow:0 0 18px rgba(45,212,191,.45);
+}
+.timeline-text b{
+  display:block;
+  font-size:14px;
+}
+.timeline-text span{
+  color:#94a3b8;
+  font-size:12px;
+}
+
 </style>
 </head>
 
@@ -1256,7 +1288,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v7.4 command-center';
+let APP_VERSION='FlowIQ Crew v7.8 operations-timeline';
 let managerFilter='all';
 let managerSearch='';
   
@@ -1868,9 +1900,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v7.4";
+      (COMPANY_NAMES[companyId] || companyId) + " · v7.8";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v7.4";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v7.8";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -2125,6 +2157,42 @@ async function deleteJob(jobId){
         <div class="network-row">
           <div class="sub">국제 근로자 준비 상태</div>
           <div class="network-badge">READY</div>
+        </div>
+      </div>
+
+      <div class="ops-timeline-board">
+        <div class="title">🧭 운영 타임라인</div>
+
+        <div class="timeline-step">
+          <div class="timeline-dot"></div>
+          <div class="timeline-text">
+            <b>공고 생성</b>
+            <span>현장 수요 등록</span>
+          </div>
+        </div>
+
+        <div class="timeline-step">
+          <div class="timeline-dot"></div>
+          <div class="timeline-text">
+            <b>지원 / 승인</b>
+            <span>근로자 배치 확정</span>
+          </div>
+        </div>
+
+        <div class="timeline-step">
+          <div class="timeline-dot"></div>
+          <div class="timeline-text">
+            <b>길찾기 / 출근</b>
+            <span>집에서 현장까지 직접 이동</span>
+          </div>
+        </div>
+
+        <div class="timeline-step">
+          <div class="timeline-dot"></div>
+          <div class="timeline-text">
+            <b>정산 / 기록</b>
+            <span>급여와 운영 데이터 자동 축적</span>
+          </div>
         </div>
       </div>
 
