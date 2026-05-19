@@ -647,6 +647,34 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   margin-top:12px;
 }
 
+
+.worker-wallet{
+  background:linear-gradient(135deg,rgba(16,185,129,.18),rgba(15,23,42,.98));
+  border:1px solid rgba(52,211,153,.22);
+  border-radius:28px;
+  padding:20px;
+  margin-bottom:18px;
+}
+.wallet-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:12px;
+}
+.wallet-label{
+  color:#a7f3d0;
+  font-size:13px;
+}
+.wallet-value{
+  font-size:28px;
+  font-weight:950;
+}
+.wallet-mini{
+  color:#94a3b8;
+  font-size:12px;
+  margin-top:6px;
+}
+
 </style>
 </head>
 
@@ -844,7 +872,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v5.9 manager-filter-search';
+let APP_VERSION='FlowIQ Crew v6.0 worker-wallet-system';
 let managerFilter='all';
 let managerSearch='';
   
@@ -1135,6 +1163,21 @@ function renderWorkerHome(){
       </div>
     </div>
 
+    <div class="worker-wallet">
+      <div class="sub">💳 예상 정산 현황</div>
+
+      <div class="wallet-row">
+        <div>
+          <div class="wallet-label">누적 예상 급여</div>
+          <div class="wallet-mini">출근 완료 기준 자동 계산</div>
+        </div>
+
+        <div class="wallet-value">
+          ${earned ? won(earned) : "0원"}
+        </div>
+      </div>
+    </div>
+
     <div class="shift-board">
       <div class="shift-board-header">
         <div class="title">📅 오늘 스케줄</div>
@@ -1346,9 +1389,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v5.9";
+      (COMPANY_NAMES[companyId] || companyId) + " · v6.0";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.9";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v6.0";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
