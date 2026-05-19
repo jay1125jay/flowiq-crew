@@ -1403,6 +1403,11 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   font-size:16px;
 }
 
+
+.manager-only-hidden{
+  display:none !important;
+}
+
 </style>
 </head>
 
@@ -1600,7 +1605,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v11.1 manager-job-shortcut';
+let APP_VERSION='FlowIQ Crew v11.2 manager-clean-view';
 let managerFilter='all';
 let managerSearch='';
   
@@ -2231,6 +2236,7 @@ async function deleteJob(jobId){
   const processedApplications=filteredByStatus.filter(a=>getStatus(a)!=="지원");
 
   managerPendingApplications=pendingApplications;
+  const hideOpsClass = role==="manager" ? "manager-only-hidden" : "";
 
   document.getElementById("mChecked").innerText=filteredAttendance.length;
   document.getElementById("mApplied").innerText=pendingApplications.length;
@@ -2238,9 +2244,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v11.1";
+      (COMPANY_NAMES[companyId] || companyId) + " · v11.2";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v11.1";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v11.2";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -2400,7 +2406,7 @@ async function deleteJob(jobId){
 
   workersList.innerHTML=
     `
-      <div class="card notice">
+      <div class="${hideOpsClass} card notice">
         <div class="sub">현재 실행 버전</div>
         <div class="title">${APP_VERSION}</div>
         <div class="sub">공고 생성 → 근로자 지원 → 관리자 승인 → 출근 확인 순서로 진행됩니다.</div>
@@ -2433,7 +2439,7 @@ async function deleteJob(jobId){
 
       ${dashboardCards}
 
-      <div class="safety-monitor-board">
+      <div class="${hideOpsClass} safety-monitor-board">
         <div class="title">🦺 안전 운영 모니터</div>
 
         <div class="safety-row">
@@ -2452,7 +2458,7 @@ async function deleteJob(jobId){
         </div>
       </div>
 
-      <div class="smart-site-health">
+      <div class="${hideOpsClass} smart-site-health">
         <div class="title">🏗️ 현장 상태 분석</div>
 
         <div class="health-row">
@@ -2471,7 +2477,7 @@ async function deleteJob(jobId){
         </div>
       </div>
 
-      <div class="ai-worker-match-board">
+      <div class="${hideOpsClass} ai-worker-match-board">
         <div class="title">🧠 AI 근로자 매칭 상태</div>
 
         <div class="match-row">
@@ -2490,7 +2496,7 @@ async function deleteJob(jobId){
         </div>
       </div>
 
-      <div class="global-network-board">
+      <div class="${hideOpsClass} global-network-board">
         <div class="title">🌍 글로벌 네트워크 상태</div>
 
         <div class="network-row">
@@ -2510,8 +2516,8 @@ async function deleteJob(jobId){
       </div>
 
       
-<div class="v11-recovery-board">
-  <div class="title">🟢 v11.1 실시간 운영 코어</div>
+<div class="${hideOpsClass} v11-recovery-board">
+  <div class="title">🟢 v11.2 실시간 운영 코어</div>
   <div class="sub">전체 플랫폼 유지 상태에서 v11 운영 안정화를 적용했습니다.</div>
 
   <div class="v11-recovery-grid">
@@ -2537,9 +2543,9 @@ async function deleteJob(jobId){
   </div>
 </div>
 
-<div class="v105-field-ready-board">
+<div class="${hideOpsClass} v105-field-ready-board">
 
-        <div class="title">✅ v11.1 현장 준비형 운영 빌드</div>
+        <div class="title">✅ v11.2 현장 준비형 운영 빌드</div>
         <div class="sub">공고, 지원, 승인, 길찾기, 출근, 정산 흐름을 실제 현장 테스트 기준으로 정리했습니다.</div>
 
         <div class="v105-field-ready-grid">
@@ -2567,9 +2573,9 @@ async function deleteJob(jobId){
         <div class="v105-build-badge">Field Ready Operations Build</div>
       </div>
 
-      <div class="v10-launch-board">
-        <div class="title">🚀 FlowIQ Crew v11.1</div>
-        <div class="sub">v11.1 통합 현장 준비형 빌드입니다. 관리자, 근로자, AI 운영, 지자체 확장 흐름을 하나의 플랫폼으로 정리했습니다.</div>
+      <div class="${hideOpsClass} v10-launch-board">
+        <div class="title">🚀 FlowIQ Crew v11.2</div>
+        <div class="sub">v11.2 통합 현장 준비형 빌드입니다. 관리자, 근로자, AI 운영, 지자체 확장 흐름을 하나의 플랫폼으로 정리했습니다.</div>
 
         <div class="v10-launch-grid">
           <div class="v10-launch-tile">
@@ -2596,7 +2602,7 @@ async function deleteJob(jobId){
         <div class="v10-ready-badge">Stable MVP Platform Build</div>
       </div>
 
-      <div class="civic-platform-board">
+      <div class="${hideOpsClass} civic-platform-board">
         <div class="title">🏛️ 지자체·농어촌 확장 플랫폼</div>
         <div class="sub">집에서 현장으로 직접 이동하는 지역 기반 글로벌 인력 운영 모델입니다.</div>
 
@@ -2623,7 +2629,7 @@ async function deleteJob(jobId){
         </div>
       </div>
 
-      <div class="partner-model-board">
+      <div class="${hideOpsClass} partner-model-board">
         <div class="title">🤝 기관 협력 운영 모델</div>
 
         <div class="partner-row">
@@ -2642,8 +2648,8 @@ async function deleteJob(jobId){
         </div>
       </div>
 
-      <div class="integrated-build-board">
-        <div class="title">🧩 v11.1 통합 안정화</div>
+      <div class="${hideOpsClass} integrated-build-board">
+        <div class="title">🧩 v11.2 통합 안정화</div>
         <div class="sub">관리자 · 근로자 · AI · 지자체 확장 흐름을 하나로 정리했습니다.</div>
 
         <div class="integrated-grid">
@@ -2671,7 +2677,7 @@ async function deleteJob(jobId){
         <div class="mobile-stable-badge">GitHub Pages / Mobile Ready</div>
       </div>
 
-      <div class="autonomous-grid-board">
+      <div class="${hideOpsClass} autonomous-grid-board">
         <div class="title">⚙️ 자율 운영 그리드</div>
         <div class="sub">현장 운영 상태를 AI 운영 흐름으로 통합합니다.</div>
 
@@ -2698,7 +2704,7 @@ async function deleteJob(jobId){
         </div>
       </div>
 
-      <div class="ops-timeline-board">
+      <div class="${hideOpsClass} ops-timeline-board">
         <div class="title">🧭 운영 타임라인</div>
 
         <div class="timeline-step">
@@ -2734,7 +2740,7 @@ async function deleteJob(jobId){
         </div>
       </div>
 
-      <div class="command-center-board">
+      <div class="${hideOpsClass} command-center-board">
         <div class="title">🛰️ 글로벌 운영 관제 센터</div>
 
         <div class="command-row">
@@ -2753,7 +2759,7 @@ async function deleteJob(jobId){
         </div>
       </div>
 
-      <div class="future-ai-board">
+      <div class="${hideOpsClass} future-ai-board">
         <div class="title">🚀 차세대 AI 운영 시스템</div>
 
         <div class="future-ai-row">
@@ -2772,7 +2778,7 @@ async function deleteJob(jobId){
         </div>
       </div>
 
-      <div class="manager-ai-board">
+      <div class="${hideOpsClass} manager-ai-board">
         <div class="title">🤖 AI 운영 분석</div>
 
         <div class="ai-row">
