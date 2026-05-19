@@ -708,6 +708,33 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   color:#93c5fd;
 }
 
+
+.smart-alert-board{
+  background:linear-gradient(180deg,rgba(30,41,59,.98),rgba(15,23,42,.98));
+  border:1px solid rgba(251,191,36,.18);
+  border-radius:28px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.smart-alert-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0;
+  border-top:1px solid rgba(148,163,184,.08);
+}
+.smart-alert-item:first-child{
+  border-top:none;
+}
+.smart-alert-badge{
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(245,158,11,.16);
+  color:#fde68a;
+  font-size:11px;
+  font-weight:900;
+}
+
 </style>
 </head>
 
@@ -905,7 +932,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v6.1 live-crew-board';
+let APP_VERSION='FlowIQ Crew v6.2 smart-alert-system';
 let managerFilter='all';
 let managerSearch='';
   
@@ -1422,9 +1449,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v6.1";
+      (COMPANY_NAMES[companyId] || companyId) + " · v6.2";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v6.1";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v6.2";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -1605,6 +1632,25 @@ async function deleteJob(jobId){
       </div>
 
       ${dashboardCards}
+
+      <div class="smart-alert-board">
+        <div class="title">🧠 스마트 운영 알림</div>
+
+        <div class="smart-alert-item">
+          <div class="sub">지원 대기 확인 필요</div>
+          <div class="smart-alert-badge">${pendingCount}건</div>
+        </div>
+
+        <div class="smart-alert-item">
+          <div class="sub">출근 준비 완료 인원</div>
+          <div class="smart-alert-badge">${approvedCount}명</div>
+        </div>
+
+        <div class="smart-alert-item">
+          <div class="sub">실시간 운영 상태</div>
+          <div class="smart-alert-badge">LIVE</div>
+        </div>
+      </div>
 
       <div class="live-crew-board">
         <div class="title">👷 실시간 현장 인원</div>
