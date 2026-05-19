@@ -1236,6 +1236,75 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   font-weight:900;
 }
 
+
+.v10-launch-board{
+  background:
+    radial-gradient(circle at top right,rgba(96,165,250,.18),transparent 36%),
+    linear-gradient(180deg,rgba(15,23,42,.98),rgba(17,24,39,.98));
+  border:1px solid rgba(96,165,250,.24);
+  border-radius:30px;
+  padding:20px;
+  margin-bottom:18px;
+  box-shadow:0 16px 42px rgba(0,0,0,.30);
+}
+.v10-launch-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+.v10-launch-tile{
+  background:rgba(15,23,42,.72);
+  border:1px solid rgba(148,163,184,.12);
+  border-radius:20px;
+  padding:14px;
+}
+.v10-launch-tile span{
+  display:block;
+  color:#94a3b8;
+  font-size:12px;
+  margin-bottom:6px;
+}
+.v10-launch-tile b{
+  font-size:16px;
+}
+.v10-ready-badge{
+  display:inline-flex;
+  padding:7px 12px;
+  border-radius:999px;
+  background:rgba(34,197,94,.16);
+  color:#86efac;
+  font-size:12px;
+  font-weight:900;
+  margin-top:12px;
+}
+.v10-worker-ready{
+  background:
+    linear-gradient(180deg,rgba(15,23,42,.98),rgba(2,6,23,.98));
+  border:1px solid rgba(45,212,191,.18);
+  border-radius:28px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.v10-worker-ready-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0;
+  border-top:1px solid rgba(148,163,184,.08);
+}
+.v10-worker-ready-row:first-child{
+  border-top:none;
+}
+.v10-worker-badge{
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(45,212,191,.16);
+  color:#99f6e4;
+  font-size:11px;
+  font-weight:900;
+}
+
 </style>
 </head>
 
@@ -1433,7 +1502,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v9.0 civic-field-platform';
+let APP_VERSION='FlowIQ Crew v10.0 stable-mvp-platform';
 let managerFilter='all';
 let managerSearch='';
   
@@ -1878,6 +1947,25 @@ function renderWorkerHome(){
       <div class="info">지원 → 승인 → 길찾기 → QR 출근 → 급여 확인</div>
     </div>
 
+    <div class="v10-worker-ready">
+      <div class="title">✅ 오늘 사용 준비</div>
+
+      <div class="v10-worker-ready-row">
+        <div class="sub">언어 선택</div>
+        <div class="v10-worker-badge">READY</div>
+      </div>
+
+      <div class="v10-worker-ready-row">
+        <div class="sub">현장 길찾기</div>
+        <div class="v10-worker-badge">READY</div>
+      </div>
+
+      <div class="v10-worker-ready-row">
+        <div class="sub">QR/GPS 출근</div>
+        <div class="v10-worker-badge">READY</div>
+      </div>
+    </div>
+
     <div class="today-site-card">
       <div class="sub">집 → 현장 직행</div>
       <div class="title">Direct-to-Site 출근 모델</div>
@@ -2052,9 +2140,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v9.0";
+      (COMPANY_NAMES[companyId] || companyId) + " · v10.0";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v9.0";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v10.0";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -2323,6 +2411,35 @@ async function deleteJob(jobId){
         </div>
       </div>
 
+      <div class="v10-launch-board">
+        <div class="title">🚀 FlowIQ Crew v10.0</div>
+        <div class="sub">1차 통합 MVP 안정화 빌드입니다. 관리자, 근로자, AI 운영, 지자체 확장 흐름을 하나의 플랫폼으로 정리했습니다.</div>
+
+        <div class="v10-launch-grid">
+          <div class="v10-launch-tile">
+            <span>모바일 실행</span>
+            <b>READY</b>
+          </div>
+
+          <div class="v10-launch-tile">
+            <span>운영 흐름</span>
+            <b>CONNECTED</b>
+          </div>
+
+          <div class="v10-launch-tile">
+            <span>관리자 관제</span>
+            <b>ACTIVE</b>
+          </div>
+
+          <div class="v10-launch-tile">
+            <span>근로자 경험</span>
+            <b>STABLE</b>
+          </div>
+        </div>
+
+        <div class="v10-ready-badge">Stable MVP Platform Build</div>
+      </div>
+
       <div class="civic-platform-board">
         <div class="title">🏛️ 지자체·농어촌 확장 플랫폼</div>
         <div class="sub">집에서 현장으로 직접 이동하는 지역 기반 글로벌 인력 운영 모델입니다.</div>
@@ -2370,7 +2487,7 @@ async function deleteJob(jobId){
       </div>
 
       <div class="integrated-build-board">
-        <div class="title">🧩 v9.0 통합 안정화</div>
+        <div class="title">🧩 v10.0 통합 안정화</div>
         <div class="sub">관리자 · 근로자 · AI · 지자체 확장 흐름을 하나로 정리했습니다.</div>
 
         <div class="integrated-grid">
