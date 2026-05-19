@@ -1600,7 +1600,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v11.0 live-operations-core';
+let APP_VERSION='FlowIQ Crew v11.1 manager-job-shortcut';
 let managerFilter='all';
 let managerSearch='';
   
@@ -2238,9 +2238,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v11.0";
+      (COMPANY_NAMES[companyId] || companyId) + " · v11.1";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v11.0";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v11.1";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -2511,7 +2511,7 @@ async function deleteJob(jobId){
 
       
 <div class="v11-recovery-board">
-  <div class="title">🟢 v11.0 실시간 운영 코어</div>
+  <div class="title">🟢 v11.1 실시간 운영 코어</div>
   <div class="sub">전체 플랫폼 유지 상태에서 v11 운영 안정화를 적용했습니다.</div>
 
   <div class="v11-recovery-grid">
@@ -2539,7 +2539,7 @@ async function deleteJob(jobId){
 
 <div class="v105-field-ready-board">
 
-        <div class="title">✅ v11.0 현장 준비형 운영 빌드</div>
+        <div class="title">✅ v11.1 현장 준비형 운영 빌드</div>
         <div class="sub">공고, 지원, 승인, 길찾기, 출근, 정산 흐름을 실제 현장 테스트 기준으로 정리했습니다.</div>
 
         <div class="v105-field-ready-grid">
@@ -2568,8 +2568,8 @@ async function deleteJob(jobId){
       </div>
 
       <div class="v10-launch-board">
-        <div class="title">🚀 FlowIQ Crew v11.0</div>
-        <div class="sub">v11.0 통합 현장 준비형 빌드입니다. 관리자, 근로자, AI 운영, 지자체 확장 흐름을 하나의 플랫폼으로 정리했습니다.</div>
+        <div class="title">🚀 FlowIQ Crew v11.1</div>
+        <div class="sub">v11.1 통합 현장 준비형 빌드입니다. 관리자, 근로자, AI 운영, 지자체 확장 흐름을 하나의 플랫폼으로 정리했습니다.</div>
 
         <div class="v10-launch-grid">
           <div class="v10-launch-tile">
@@ -2643,7 +2643,7 @@ async function deleteJob(jobId){
       </div>
 
       <div class="integrated-build-board">
-        <div class="title">🧩 v11.0 통합 안정화</div>
+        <div class="title">🧩 v11.1 통합 안정화</div>
         <div class="sub">관리자 · 근로자 · AI · 지자체 확장 흐름을 하나로 정리했습니다.</div>
 
         <div class="integrated-grid">
@@ -2837,7 +2837,7 @@ async function deleteJob(jobId){
         </div>
       </div>
 
-      <div class="section">생성한 공고</div>
+      <div class="section" id="createdJobsSection">생성한 공고</div>
       ${jobRows || `<div class="card"><div class="sub">아직 생성한 공고가 없습니다.</div></div>`}
 
       <div class="section">지원 대기</div>
@@ -3091,9 +3091,26 @@ function goLanguageSelect(){
 function goRoleHome(){
   goRoleSelect();
 }
+
+function scrollToCreatedJobs(){
+  goScreen("managerScreen");
+
+  setTimeout(()=>{
+    const target=document.getElementById("createdJobsSection");
+
+    if(target){
+      target.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+      });
+    }
+  },120);
+}
+
+
 function navPrimary(){
   if(role==="manager" || role==="master"){
-    goScreen("jobFormScreen");
+    scrollToCreatedJobs();
   }else{
     goScreen("workerScreen");
   }
