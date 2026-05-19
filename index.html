@@ -1091,6 +1091,96 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   font-size:12px;
 }
 
+
+.autonomous-grid-board{
+  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(17,24,39,.98));
+  border:1px solid rgba(34,197,94,.18);
+  border-radius:28px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.autonomous-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+}
+.autonomous-tile{
+  background:rgba(15,23,42,.72);
+  border:1px solid rgba(148,163,184,.10);
+  border-radius:20px;
+  padding:14px;
+}
+.autonomous-tile span{
+  display:block;
+  color:#94a3b8;
+  font-size:12px;
+  margin-bottom:6px;
+}
+.autonomous-tile b{
+  font-size:18px;
+}
+
+
+.integrated-build-board{
+  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(17,24,39,.98));
+  border:1px solid rgba(96,165,250,.20);
+  border-radius:28px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.integrated-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+}
+.integrated-tile{
+  background:rgba(15,23,42,.72);
+  border:1px solid rgba(148,163,184,.10);
+  border-radius:20px;
+  padding:14px;
+}
+.integrated-tile span{
+  display:block;
+  color:#94a3b8;
+  font-size:12px;
+  margin-bottom:6px;
+}
+.integrated-tile b{
+  font-size:16px;
+}
+.mobile-stable-badge{
+  display:inline-flex;
+  padding:7px 12px;
+  border-radius:999px;
+  background:rgba(16,185,129,.16);
+  color:#86efac;
+  font-size:12px;
+  font-weight:900;
+  margin-top:10px;
+}
+
+
+.master-cleanup-board{
+  background:rgba(239,68,68,.10);
+  border:1px solid rgba(248,113,113,.18);
+  border-radius:24px;
+  padding:16px;
+  margin-bottom:18px;
+}
+.master-cleanup-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:12px;
+}
+.master-cleanup-grid button{
+  min-height:46px;
+  border-radius:18px;
+  font-size:13px;
+}
+
 </style>
 </head>
 
@@ -1288,7 +1378,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v7.8 operations-timeline';
+let APP_VERSION='FlowIQ Crew v8.5 integrated-stable-build';
 let managerFilter='all';
 let managerSearch='';
   
@@ -1724,7 +1814,7 @@ function renderWorkerHome(){
       </div>
 
       <div class="translate-pill">
-        🌐 다국어 지원 준비 완료
+        🌐 다국어 지원 준비 완료 · 모바일 최적화
       </div>
     </div>
 
@@ -1900,9 +1990,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v7.8";
+      (COMPANY_NAMES[companyId] || companyId) + " · v8.5";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v7.8";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v8.5";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -2068,6 +2158,17 @@ async function deleteJob(jobId){
         <div class="sub">공고 생성 → 근로자 지원 → 관리자 승인 → 출근 확인 순서로 진행됩니다.</div>
       </div>
 
+      ${role==="master" ? `
+        <div class="master-cleanup-board">
+          <div class="title">🛡️ MASTER 정리 도구</div>
+          <div class="sub">테스트 데이터가 꼬였을 때만 사용하세요.</div>
+          <div class="master-cleanup-grid">
+            <button class="red" onclick="masterClearApplications()">지원 전체 삭제</button>
+            <button class="red" onclick="masterClearAttendance()">출근 전체 삭제</button>
+          </div>
+        </div>
+      ` : ``}
+
       <div class="manager-filter">
         <div class="title">🔎 현장 검색 / 필터</div>
         <input placeholder="이름, 전화번호, 공고명 검색" value="${managerSearch}" oninput="setManagerSearch(this.value)" />
@@ -2157,6 +2258,62 @@ async function deleteJob(jobId){
         <div class="network-row">
           <div class="sub">국제 근로자 준비 상태</div>
           <div class="network-badge">READY</div>
+        </div>
+      </div>
+
+      <div class="integrated-build-board">
+        <div class="title">🧩 v8.5 통합 안정화</div>
+        <div class="sub">관리자 · 근로자 · AI 운영 흐름을 하나로 정리했습니다.</div>
+
+        <div class="integrated-grid">
+          <div class="integrated-tile">
+            <span>모바일 실행</span>
+            <b>STABLE</b>
+          </div>
+
+          <div class="integrated-tile">
+            <span>버전 관리</span>
+            <b>SYNCED</b>
+          </div>
+
+          <div class="integrated-tile">
+            <span>관리자 UX</span>
+            <b>INTEGRATED</b>
+          </div>
+
+          <div class="integrated-tile">
+            <span>근로자 UX</span>
+            <b>READY</b>
+          </div>
+        </div>
+
+        <div class="mobile-stable-badge">GitHub Pages / Mobile Ready</div>
+      </div>
+
+      <div class="autonomous-grid-board">
+        <div class="title">⚙️ 자율 운영 그리드</div>
+        <div class="sub">현장 운영 상태를 AI 운영 흐름으로 통합합니다.</div>
+
+        <div class="autonomous-grid">
+          <div class="autonomous-tile">
+            <span>운영 모드</span>
+            <b>AUTO READY</b>
+          </div>
+
+          <div class="autonomous-tile">
+            <span>현장 연결</span>
+            <b>${totalJobs} SITE</b>
+          </div>
+
+          <div class="autonomous-tile">
+            <span>승인 흐름</span>
+            <b>${approvedCount} CREW</b>
+          </div>
+
+          <div class="autonomous-tile">
+            <span>출근 흐름</span>
+            <b>${attendanceCount} LIVE</b>
+          </div>
         </div>
       </div>
 
@@ -2687,6 +2844,50 @@ async function quickApprove(applicationId){
 
 function sendWorkerNotice(phone){
   alert("📢 근로자 알림 전송 준비\\n\\n대상: "+phone+"\\n\\n향후 푸시/문자 기능과 연결 예정");
+}
+
+
+
+async function masterClearApplications(){
+  if(role!=="master"){
+    alert("MASTER만 사용할 수 있습니다.");
+    return;
+  }
+
+  if(!confirm("지원 기록 전체를 삭제할까요? 테스트 데이터 정리용입니다.")){
+    return;
+  }
+
+  const {error}=await db.from("applications").delete().neq("id",-1);
+
+  if(error){
+    alert("지원 전체 삭제 오류: "+error.message);
+    return;
+  }
+
+  await loadData();
+  alert("지원 기록 전체 삭제 완료");
+}
+
+async function masterClearAttendance(){
+  if(role!=="master"){
+    alert("MASTER만 사용할 수 있습니다.");
+    return;
+  }
+
+  if(!confirm("출근 기록 전체를 삭제할까요? 테스트 데이터 정리용입니다.")){
+    return;
+  }
+
+  const {error}=await db.from("attendance").delete().neq("id",-1);
+
+  if(error){
+    alert("출근 전체 삭제 오류: "+error.message);
+    return;
+  }
+
+  await loadData();
+  alert("출근 기록 전체 삭제 완료");
 }
 
 
