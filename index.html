@@ -368,6 +368,43 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
 .worker-actions-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
 .worker-actions-row button{min-height:54px;border-radius:20px;font-size:14px}
 
+
+.map-choice{
+  position:fixed;
+  left:50%;
+  bottom:96px;
+  transform:translateX(-50%);
+  width:calc(100% - 28px);
+  max-width:420px;
+  background:rgba(15,23,42,.98);
+  border:1px solid rgba(148,163,184,.18);
+  border-radius:28px;
+  padding:18px;
+  box-shadow:0 18px 46px rgba(0,0,0,.45);
+  z-index:9999;
+}
+.map-choice.hidden{display:none}
+.map-choice-title{
+  font-size:18px;
+  font-weight:900;
+  margin-bottom:6px;
+}
+.map-choice-sub{
+  color:#94a3b8;
+  font-size:13px;
+  margin-bottom:14px;
+}
+.map-choice-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.map-choice-grid button{
+  min-height:56px;
+  border-radius:18px;
+  font-size:14px;
+}
+
 </style>
 </head>
 
@@ -521,6 +558,18 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
 </section>
 </main>
 
+
+<div id="mapChoice" class="map-choice hidden">
+  <div class="map-choice-title">길찾기 앱 선택</div>
+  <div class="map-choice-sub" id="mapChoiceLocation">현장 위치</div>
+  <div class="map-choice-grid">
+    <button class="green" onclick="openSelectedMap('naver')">네이버지도</button>
+    <button class="blue" onclick="openSelectedMap('kakao')">카카오맵</button>
+    <button class="gray" onclick="openSelectedMap('google')">구글맵</button>
+    <button class="red" onclick="closeMapChoice()">닫기</button>
+  </div>
+</div>
+
 <nav class="bottom-nav" id="bottomNav">
   <button id="navHome" onclick="goHome()">홈</button>
   <button id="navJobs" onclick="navPrimary()">일자리</button>
@@ -553,7 +602,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v5.0 worker-home-upgrade';
+let APP_VERSION='FlowIQ Crew v5.1 navigation-choice-upgrade';
   
 const MASTER_PASSWORD="1234";
 const COMPANY_PASSWORDS={
@@ -757,14 +806,47 @@ function getStatusMeta(status){
   return {label:"근무 가능",icon:"⚪",pill:"pill-ready",title:"근무 가능",desc:"원하는 공고에 지원하면 오늘 일정이 이곳에 표시됩니다."};
 }
 
+let selectedMapLocation="";
+
 function openMap(locationText){
   if(!locationText){
     alert("현장 위치가 없습니다.");
     return;
   }
 
-  const q=encodeURIComponent(locationText);
-  window.open(`https://www.google.com/maps/search/?api=1&query=${q}`,"_blank");
+  selectedMapLocation=locationText;
+
+  const box=document.getElementById("mapChoice");
+  const label=document.getElementById("mapChoiceLocation");
+
+  if(label)label.innerText=locationText;
+  if(box)box.classList.remove("hidden");
+}
+
+function closeMapChoice(){
+  const box=document.getElementById("mapChoice");
+  if(box)box.classList.add("hidden");
+}
+
+function openSelectedMap(type){
+  if(!selectedMapLocation){
+    alert("현장 위치가 없습니다.");
+    return;
+  }
+
+  const q=encodeURIComponent(selectedMapLocation);
+  let url="";
+
+  if(type==="naver"){
+    url=`https://map.naver.com/v5/search/${q}`;
+  }else if(type==="kakao"){
+    url=`https://map.kakao.com/link/search/${q}`;
+  }else{
+    url=`https://www.google.com/maps/search/?api=1&query=${q}`;
+  }
+
+  window.open(url,"_blank");
+  closeMapChoice();
 }
 
 function renderWorkerHome(){
@@ -800,6 +882,11 @@ function renderWorkerHome(){
           <b>${earned ? won(earned) : "0원"}</b>
         </div>
       </div>
+    </div>
+
+    <div class="today-site-card">
+      <div class="sub">출근 흐름</div>
+      <div class="info">지원 → 승인 → 길찾기 → QR 출근 → 급여 확인</div>
     </div>
 
     <div class="today-site-card">
@@ -940,9 +1027,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v5.0";
+      (COMPANY_NAMES[companyId] || companyId) + " · v5.1";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.0";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.1";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
