@@ -1305,6 +1305,74 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   font-weight:900;
 }
 
+
+.v105-field-ready-board{
+  background:
+    radial-gradient(circle at top right,rgba(45,212,191,.18),transparent 36%),
+    linear-gradient(180deg,rgba(15,23,42,.98),rgba(17,24,39,.98));
+  border:1px solid rgba(45,212,191,.24);
+  border-radius:30px;
+  padding:20px;
+  margin-bottom:18px;
+  box-shadow:0 16px 42px rgba(0,0,0,.30);
+}
+.v105-field-ready-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+.v105-field-ready-tile{
+  background:rgba(15,23,42,.72);
+  border:1px solid rgba(148,163,184,.12);
+  border-radius:20px;
+  padding:14px;
+}
+.v105-field-ready-tile span{
+  display:block;
+  color:#94a3b8;
+  font-size:12px;
+  margin-bottom:6px;
+}
+.v105-field-ready-tile b{
+  font-size:16px;
+}
+.v105-build-badge{
+  display:inline-flex;
+  padding:7px 12px;
+  border-radius:999px;
+  background:rgba(45,212,191,.16);
+  color:#99f6e4;
+  font-size:12px;
+  font-weight:900;
+  margin-top:12px;
+}
+.v105-worker-direct-board{
+  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(2,6,23,.98));
+  border:1px solid rgba(96,165,250,.18);
+  border-radius:28px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.v105-worker-direct-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0;
+  border-top:1px solid rgba(148,163,184,.08);
+}
+.v105-worker-direct-row:first-child{
+  border-top:none;
+}
+.v105-worker-direct-badge{
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(96,165,250,.16);
+  color:#bfdbfe;
+  font-size:11px;
+  font-weight:900;
+}
+
 </style>
 </head>
 
@@ -1502,7 +1570,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v10.0 stable-mvp-platform';
+let APP_VERSION='FlowIQ Crew v10.5 field-ready-operations';
 let managerFilter='all';
 let managerSearch='';
   
@@ -2140,9 +2208,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v10.0";
+      (COMPANY_NAMES[companyId] || companyId) + " · v10.5";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v10.0";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v10.5";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -2411,9 +2479,38 @@ async function deleteJob(jobId){
         </div>
       </div>
 
+      <div class="v105-field-ready-board">
+        <div class="title">✅ v10.5 현장 준비형 운영 빌드</div>
+        <div class="sub">공고, 지원, 승인, 길찾기, 출근, 정산 흐름을 실제 현장 테스트 기준으로 정리했습니다.</div>
+
+        <div class="v105-field-ready-grid">
+          <div class="v105-field-ready-tile">
+            <span>현장 운영 루프</span>
+            <b>READY</b>
+          </div>
+
+          <div class="v105-field-ready-tile">
+            <span>모바일 배포</span>
+            <b>SYNC</b>
+          </div>
+
+          <div class="v105-field-ready-tile">
+            <span>MASTER 관리</span>
+            <b>TOOLS</b>
+          </div>
+
+          <div class="v105-field-ready-tile">
+            <span>지자체 확장</span>
+            <b>PREP</b>
+          </div>
+        </div>
+
+        <div class="v105-build-badge">Field Ready Operations Build</div>
+      </div>
+
       <div class="v10-launch-board">
-        <div class="title">🚀 FlowIQ Crew v10.0</div>
-        <div class="sub">1차 통합 MVP 안정화 빌드입니다. 관리자, 근로자, AI 운영, 지자체 확장 흐름을 하나의 플랫폼으로 정리했습니다.</div>
+        <div class="title">🚀 FlowIQ Crew v10.5</div>
+        <div class="sub">v10.5 통합 현장 준비형 빌드입니다. 관리자, 근로자, AI 운영, 지자체 확장 흐름을 하나의 플랫폼으로 정리했습니다.</div>
 
         <div class="v10-launch-grid">
           <div class="v10-launch-tile">
@@ -2487,7 +2584,7 @@ async function deleteJob(jobId){
       </div>
 
       <div class="integrated-build-board">
-        <div class="title">🧩 v10.0 통합 안정화</div>
+        <div class="title">🧩 v10.5 통합 안정화</div>
         <div class="sub">관리자 · 근로자 · AI · 지자체 확장 흐름을 하나로 정리했습니다.</div>
 
         <div class="integrated-grid">
