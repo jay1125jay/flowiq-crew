@@ -675,6 +675,39 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   margin-top:6px;
 }
 
+
+.live-crew-board{
+  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(17,24,39,.98));
+  border:1px solid rgba(59,130,246,.18);
+  border-radius:28px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.live-crew-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0;
+  border-top:1px solid rgba(148,163,184,.08);
+}
+.live-crew-row:first-child{
+  border-top:none;
+}
+.live-badge{
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+}
+.live-green{
+  background:rgba(16,185,129,.16);
+  color:#6ee7b7;
+}
+.live-blue{
+  background:rgba(59,130,246,.16);
+  color:#93c5fd;
+}
+
 </style>
 </head>
 
@@ -872,7 +905,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v6.0 worker-wallet-system';
+let APP_VERSION='FlowIQ Crew v6.1 live-crew-board';
 let managerFilter='all';
 let managerSearch='';
   
@@ -1389,9 +1422,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v6.0";
+      (COMPANY_NAMES[companyId] || companyId) + " · v6.1";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v6.0";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v6.1";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -1572,6 +1605,24 @@ async function deleteJob(jobId){
       </div>
 
       ${dashboardCards}
+
+      <div class="live-crew-board">
+        <div class="title">👷 실시간 현장 인원</div>
+
+        <div class="live-crew-row">
+          <div>
+            <div class="sub">오늘 승인 인원</div>
+          </div>
+          <div class="live-badge live-green">${approvedCount}명</div>
+        </div>
+
+        <div class="live-crew-row">
+          <div>
+            <div class="sub">현재 출근 인원</div>
+          </div>
+          <div class="live-badge live-blue">${attendanceCount}명</div>
+        </div>
+      </div>
 
       <div class="urgent-banner">
         <div class="title">🚨 긴급 운영 상태</div>
