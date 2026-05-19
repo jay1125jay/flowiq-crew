@@ -602,7 +602,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v5.1 navigation-choice-upgrade';
+let APP_VERSION='FlowIQ Crew v5.2 manager-jobs-visible';
   
 const MASTER_PASSWORD="1234";
 const COMPANY_PASSWORDS={
@@ -1027,9 +1027,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v5.1";
+      (COMPANY_NAMES[companyId] || companyId) + " · v5.2";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.1";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.2";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -1106,16 +1106,35 @@ async function deleteJob(jobId){
       </div>
     </div>`).join("");
 
+  const jobRows=filteredJobs.map(j=>`
+    <div class="card">
+      <div class="job-head">
+        <div>
+          <div class="job-title">${j.title}</div>
+          <div class="type">${j.type || "공고"}</div>
+        </div>
+        <div class="badge">₩${won(j.salary)}</div>
+      </div>
+      <div class="info">📍 ${j.location || "-"}</div>
+      <div class="info">🕒 ${j.work_time || "-"}</div>
+      <div class="info">👥 ${j.applied || 0}/${j.needed || 0}명 지원</div>
+      <div class="info">🌐 ${j.language || "한국어"}</div>
+    </div>
+  `).join("");
+
   workersList.innerHTML=
     `
       <div class="card notice">
         <div class="sub">현재 실행 버전</div>
         <div class="title">${APP_VERSION}</div>
-        <div class="sub">승인 버튼을 누르면 즉시 처리 완료로 이동해야 정상입니다.</div>
+        <div class="sub">공고 생성 → 근로자 지원 → 관리자 승인 → 출근 확인 순서로 진행됩니다.</div>
       </div>
 
+      <div class="section">생성한 공고</div>
+      ${jobRows || `<div class="card"><div class="sub">아직 생성한 공고가 없습니다.</div></div>`}
+
       <div class="section">지원 대기</div>
-      ${pendingRows || `<div class="card"><div class="sub">대기중인 지원자가 없습니다.</div></div>`}
+      ${pendingRows || `<div class="card"><div class="sub">아직 지원한 근로자가 없습니다.</div></div>`}
 
       <div class="section">처리 완료</div>
       ${processedRows || `<div class="card"><div class="sub">아직 승인/거절 처리된 지원자가 없습니다.</div></div>`}
