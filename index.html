@@ -1418,6 +1418,39 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   display:none !important;
 }
 
+
+.field-simple-note{
+  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(17,24,39,.98));
+  border:1px solid rgba(96,165,250,.16);
+  border-radius:26px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.field-simple-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+}
+.field-simple-tile{
+  background:rgba(15,23,42,.76);
+  border:1px solid rgba(148,163,184,.10);
+  border-radius:20px;
+  padding:14px;
+}
+.field-simple-tile span{
+  display:block;
+  color:#94a3b8;
+  font-size:12px;
+  margin-bottom:6px;
+}
+.field-simple-tile b{
+  font-size:16px;
+}
+.manager-simple-anchor{
+  scroll-margin-top:16px;
+}
+
 </style>
 </head>
 
@@ -1615,7 +1648,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v11.4 minimal-worker-home';
+let APP_VERSION='FlowIQ Crew v11.5 field-simple-mode';
 let managerFilter='all';
 let managerSearch='';
   
@@ -2257,9 +2290,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v11.4";
+      (COMPANY_NAMES[companyId] || companyId) + " · v11.5";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v11.4";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v11.5";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -2422,7 +2455,7 @@ async function deleteJob(jobId){
       <div class="${hideOpsClass} card notice">
         <div class="sub">현재 실행 버전</div>
         <div class="title">${APP_VERSION}</div>
-        <div class="sub">공고 생성 → 근로자 지원 → 관리자 승인 → 출근 확인 순서로 진행됩니다.</div>
+        <div class="sub">현장 운영에 필요한 핵심 정보만 간결하게 표시합니다.</div>
       </div>
 
       ${role==="master" ? `
@@ -2530,7 +2563,7 @@ async function deleteJob(jobId){
 
       
 <div class="${hideOpsClass} v11-recovery-board">
-  <div class="title">🟢 v11.4 실시간 운영 코어</div>
+  <div class="title">🟢 v11.5 실시간 운영 코어</div>
   <div class="sub">전체 플랫폼 유지 상태에서 v11 운영 안정화를 적용했습니다.</div>
 
   <div class="v11-recovery-grid">
@@ -2558,7 +2591,7 @@ async function deleteJob(jobId){
 
 <div class="${hideOpsClass} v105-field-ready-board">
 
-        <div class="title">✅ v11.4 현장 준비형 운영 빌드</div>
+        <div class="title">✅ v11.5 현장 준비형 운영 빌드</div>
         <div class="sub">공고, 지원, 승인, 길찾기, 출근, 정산 흐름을 실제 현장 테스트 기준으로 정리했습니다.</div>
 
         <div class="v105-field-ready-grid">
@@ -2587,8 +2620,8 @@ async function deleteJob(jobId){
       </div>
 
       <div class="${hideOpsClass} v10-launch-board">
-        <div class="title">🚀 FlowIQ Crew v11.4</div>
-        <div class="sub">v11.4 통합 현장 준비형 빌드입니다. 관리자, 근로자, AI 운영, 지자체 확장 흐름을 하나의 플랫폼으로 정리했습니다.</div>
+        <div class="title">🚀 FlowIQ Crew v11.5</div>
+        <div class="sub">v11.5 통합 현장 준비형 빌드입니다. 관리자, 근로자, AI 운영, 지자체 확장 흐름을 하나의 플랫폼으로 정리했습니다.</div>
 
         <div class="v10-launch-grid">
           <div class="v10-launch-tile">
@@ -2662,7 +2695,7 @@ async function deleteJob(jobId){
       </div>
 
       <div class="${hideOpsClass} integrated-build-board">
-        <div class="title">🧩 v11.4 통합 안정화</div>
+        <div class="title">🧩 v11.5 통합 안정화</div>
         <div class="sub">관리자 · 근로자 · AI · 지자체 확장 흐름을 하나로 정리했습니다.</div>
 
         <div class="integrated-grid">
@@ -2853,6 +2886,33 @@ async function deleteJob(jobId){
 
         <div class="live-alert">
           오늘 출근 예정: ${attendanceCount + approvedCount}명
+        </div>
+      </div>
+
+      <div class="field-simple-note manager-simple-anchor">
+        <div class="title">현장 운영</div>
+        <div class="sub">오늘은 공고, 지원자, 출근자만 빠르게 확인하세요.</div>
+
+        <div class="field-simple-grid">
+          <div class="field-simple-tile">
+            <span>공고</span>
+            <b>${totalJobs}</b>
+          </div>
+
+          <div class="field-simple-tile">
+            <span>지원 대기</span>
+            <b>${pendingCount}</b>
+          </div>
+
+          <div class="field-simple-tile">
+            <span>승인</span>
+            <b>${approvedCount}</b>
+          </div>
+
+          <div class="field-simple-tile">
+            <span>출근</span>
+            <b>${attendanceCount}</b>
+          </div>
         </div>
       </div>
 
