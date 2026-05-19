@@ -897,6 +897,33 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   font-weight:900;
 }
 
+
+.smart-site-health{
+  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(17,24,39,.98));
+  border:1px solid rgba(34,211,238,.18);
+  border-radius:28px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.health-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0;
+  border-top:1px solid rgba(148,163,184,.08);
+}
+.health-row:first-child{
+  border-top:none;
+}
+.health-badge{
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(34,211,238,.16);
+  color:#a5f3fc;
+  font-size:11px;
+  font-weight:900;
+}
+
 </style>
 </head>
 
@@ -1094,7 +1121,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v6.8 ai-worker-matching';
+let APP_VERSION='FlowIQ Crew v6.9 site-health-analysis';
 let managerFilter='all';
 let managerSearch='';
   
@@ -1668,9 +1695,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v6.8";
+      (COMPANY_NAMES[companyId] || companyId) + " · v6.9";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v6.8";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v6.9";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -1851,6 +1878,25 @@ async function deleteJob(jobId){
       </div>
 
       ${dashboardCards}
+
+      <div class="smart-site-health">
+        <div class="title">🏗️ 현장 상태 분석</div>
+
+        <div class="health-row">
+          <div class="sub">현재 운영 현장</div>
+          <div class="health-badge">${totalJobs}개</div>
+        </div>
+
+        <div class="health-row">
+          <div class="sub">안정 운영 현장</div>
+          <div class="health-badge">${attendanceCount > 0 ? "GOOD" : "WAIT"}</div>
+        </div>
+
+        <div class="health-row">
+          <div class="sub">실시간 운영 상태</div>
+          <div class="health-badge">LIVE</div>
+        </div>
+      </div>
 
       <div class="ai-worker-match-board">
         <div class="title">🧠 AI 근로자 매칭 상태</div>
