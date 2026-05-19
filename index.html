@@ -1005,6 +1005,33 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   font-weight:900;
 }
 
+
+.future-ai-board{
+  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(17,24,39,.98));
+  border:1px solid rgba(192,132,252,.18);
+  border-radius:28px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.future-ai-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0;
+  border-top:1px solid rgba(148,163,184,.08);
+}
+.future-ai-row:first-child{
+  border-top:none;
+}
+.future-ai-badge{
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(192,132,252,.16);
+  color:#e9d5ff;
+  font-size:11px;
+  font-weight:900;
+}
+
 </style>
 </head>
 
@@ -1202,7 +1229,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v7.2 safety-monitor-system';
+let APP_VERSION='FlowIQ Crew v7.3 future-ai-system';
 let managerFilter='all';
 let managerSearch='';
   
@@ -1814,9 +1841,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v7.2";
+      (COMPANY_NAMES[companyId] || companyId) + " · v7.3";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v7.2";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v7.3";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -2071,6 +2098,25 @@ async function deleteJob(jobId){
         <div class="network-row">
           <div class="sub">국제 근로자 준비 상태</div>
           <div class="network-badge">READY</div>
+        </div>
+      </div>
+
+      <div class="future-ai-board">
+        <div class="title">🚀 차세대 AI 운영 시스템</div>
+
+        <div class="future-ai-row">
+          <div class="sub">AI 자동 관제</div>
+          <div class="future-ai-badge">ACTIVE</div>
+        </div>
+
+        <div class="future-ai-row">
+          <div class="sub">현장 자동 예측</div>
+          <div class="future-ai-badge">READY</div>
+        </div>
+
+        <div class="future-ai-row">
+          <div class="sub">글로벌 운영 확장</div>
+          <div class="future-ai-badge">ONLINE</div>
         </div>
       </div>
 
