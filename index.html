@@ -452,6 +452,39 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   color:#cbd5e1;
 }
 
+
+.status-live-bar{
+  display:flex;
+  gap:8px;
+  overflow:auto;
+  margin-top:16px;
+}
+.status-step{
+  flex:1;
+  min-width:90px;
+  background:rgba(15,23,42,.72);
+  border:1px solid rgba(148,163,184,.10);
+  border-radius:18px;
+  padding:12px;
+  text-align:center;
+  font-size:12px;
+}
+.status-step.active{
+  border-color:rgba(52,211,153,.35);
+  background:rgba(16,185,129,.14);
+  color:#34d399;
+}
+.manager-urgent{
+  background:rgba(239,68,68,.12);
+  border:1px solid rgba(248,113,113,.20);
+  color:#fecaca;
+  border-radius:18px;
+  padding:12px;
+  margin-top:10px;
+  font-size:13px;
+  font-weight:700;
+}
+
 </style>
 </head>
 
@@ -649,7 +682,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v5.3.1 master-login-fix';
+let APP_VERSION='FlowIQ Crew v5.4 worker-flow-live-upgrade';
   
 const MASTER_PASSWORD="1234";
 const COMPANY_PASSWORDS={
@@ -919,6 +952,13 @@ function renderWorkerHome(){
       <div class="worker-hero-title">${meta.title}</div>
       <div class="worker-hero-sub">${meta.desc}</div>
 
+      <div class="status-live-bar">
+        <div class="status-step active">지원</div>
+        <div class="status-step ${status==='승인' || status==='출근완료' ? 'active' : ''}">승인</div>
+        <div class="status-step ${status==='출근완료' ? 'active' : ''}">출근</div>
+        <div class="status-step ${status==='출근완료' ? 'active' : ''}">급여</div>
+      </div>
+
       <div class="worker-mini-grid">
         <div class="worker-mini-card">
           <span>오늘 예상 급여</span>
@@ -1074,9 +1114,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v5.3.1";
+      (COMPANY_NAMES[companyId] || companyId) + " · v5.4";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.3.1";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.4";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -1208,6 +1248,8 @@ async function deleteJob(jobId){
       <div class="info">🕒 ${j.work_time || "-"}</div>
       <div class="info">👥 ${j.applied || 0}/${j.needed || 0}명 지원</div>
       <div class="info">🌐 ${j.language || "한국어"}</div>
+      ${(Number(j.needed||0) - Number(j.applied||0)) > 3 ? 
+        `<div class="manager-urgent">🚨 인원 부족 현장</div>` : ``}
     </div>
   `).join("");
 
