@@ -405,6 +405,53 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   font-size:14px;
 }
 
+
+.manager-summary-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-bottom:18px;
+}
+.manager-summary-card{
+  background:linear-gradient(180deg,rgba(15,23,42,.96),rgba(17,24,39,.96));
+  border:1px solid rgba(148,163,184,.12);
+  border-radius:26px;
+  padding:18px;
+}
+.manager-summary-card .label{
+  color:#94a3b8;
+  font-size:13px;
+}
+.manager-summary-card .value{
+  font-size:28px;
+  font-weight:950;
+  margin-top:6px;
+}
+.manager-summary-card .mini{
+  font-size:12px;
+  color:#64748b;
+  margin-top:6px;
+}
+.manager-todo{
+  background:linear-gradient(180deg,rgba(30,41,59,.96),rgba(15,23,42,.96));
+  border:1px solid rgba(96,165,250,.16);
+  border-radius:28px;
+  padding:20px;
+  margin-bottom:18px;
+}
+.manager-todo-title{
+  font-size:20px;
+  font-weight:900;
+  margin-bottom:12px;
+}
+.todo-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+  color:#cbd5e1;
+}
+
 </style>
 </head>
 
@@ -602,7 +649,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v5.2 manager-jobs-visible';
+let APP_VERSION='FlowIQ Crew v5.3 manager-dashboard-upgrade';
   
 const MASTER_PASSWORD="1234";
 const COMPANY_PASSWORDS={
@@ -1027,9 +1074,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v5.2";
+      (COMPANY_NAMES[companyId] || companyId) + " · v5.3";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.2";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.3";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -1106,6 +1153,48 @@ async function deleteJob(jobId){
       </div>
     </div>`).join("");
 
+  const totalJobs=filteredJobs.length;
+  const pendingCount=filteredApps.filter(a=>(a.status||"지원")==="지원").length;
+  const approvedCount=filteredApps.filter(a=>(a.status||"").includes("승인")).length;
+  const attendanceCount=filteredAttendance.length;
+
+  const dashboardCards=`
+    <div class="manager-summary-grid">
+      <div class="manager-summary-card">
+        <div class="label">생성 공고</div>
+        <div class="value">${totalJobs}</div>
+        <div class="mini">현재 운영중인 공고</div>
+      </div>
+
+      <div class="manager-summary-card">
+        <div class="label">지원 대기</div>
+        <div class="value">${pendingCount}</div>
+        <div class="mini">승인 대기중</div>
+      </div>
+
+      <div class="manager-summary-card">
+        <div class="label">승인 완료</div>
+        <div class="value">${approvedCount}</div>
+        <div class="mini">출근 준비 완료</div>
+      </div>
+
+      <div class="manager-summary-card">
+        <div class="label">출근 완료</div>
+        <div class="value">${attendanceCount}</div>
+        <div class="mini">오늘 출근 기록</div>
+      </div>
+    </div>
+
+    <div class="manager-todo">
+      <div class="manager-todo-title">📋 오늘 할 일</div>
+
+      <div class="todo-row">✅ 지원자 승인 확인</div>
+      <div class="todo-row">🧭 현장 위치 안내</div>
+      <div class="todo-row">📷 QR 출근 체크</div>
+      <div class="todo-row">💳 급여 정산 확인</div>
+    </div>
+  `;
+
   const jobRows=filteredJobs.map(j=>`
     <div class="card">
       <div class="job-head">
@@ -1129,6 +1218,8 @@ async function deleteJob(jobId){
         <div class="title">${APP_VERSION}</div>
         <div class="sub">공고 생성 → 근로자 지원 → 관리자 승인 → 출근 확인 순서로 진행됩니다.</div>
       </div>
+
+      ${dashboardCards}
 
       <div class="section">생성한 공고</div>
       ${jobRows || `<div class="card"><div class="sub">아직 생성한 공고가 없습니다.</div></div>`}
