@@ -1032,6 +1032,33 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   font-weight:900;
 }
 
+
+.command-center-board{
+  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(17,24,39,.98));
+  border:1px solid rgba(59,130,246,.18);
+  border-radius:28px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.command-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0;
+  border-top:1px solid rgba(148,163,184,.08);
+}
+.command-row:first-child{
+  border-top:none;
+}
+.command-badge{
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(59,130,246,.16);
+  color:#bfdbfe;
+  font-size:11px;
+  font-weight:900;
+}
+
 </style>
 </head>
 
@@ -1229,7 +1256,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v7.3 future-ai-system';
+let APP_VERSION='FlowIQ Crew v7.4 command-center';
 let managerFilter='all';
 let managerSearch='';
   
@@ -1841,9 +1868,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v7.3";
+      (COMPANY_NAMES[companyId] || companyId) + " · v7.4";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v7.3";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v7.4";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -2098,6 +2125,25 @@ async function deleteJob(jobId){
         <div class="network-row">
           <div class="sub">국제 근로자 준비 상태</div>
           <div class="network-badge">READY</div>
+        </div>
+      </div>
+
+      <div class="command-center-board">
+        <div class="title">🛰️ 글로벌 운영 관제 센터</div>
+
+        <div class="command-row">
+          <div class="sub">실시간 운영 연결</div>
+          <div class="command-badge">ONLINE</div>
+        </div>
+
+        <div class="command-row">
+          <div class="sub">근로자 네트워크</div>
+          <div class="command-badge">${approvedCount + attendanceCount} ACTIVE</div>
+        </div>
+
+        <div class="command-row">
+          <div class="sub">AI 중앙 제어</div>
+          <div class="command-badge">SYNC</div>
         </div>
       </div>
 
