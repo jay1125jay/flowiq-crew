@@ -570,6 +570,60 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   margin-top:10px;
 }
 
+
+.shift-board{
+  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(17,24,39,.98));
+  border:1px solid rgba(148,163,184,.12);
+  border-radius:28px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.shift-board-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+.shift-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 12px;
+  border-radius:999px;
+  background:rgba(16,185,129,.14);
+  color:#6ee7b7;
+  font-size:12px;
+  font-weight:800;
+}
+.shift-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 0;
+  border-top:1px solid rgba(148,163,184,.08);
+}
+.shift-row:first-child{
+  border-top:none;
+}
+.shift-left{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.shift-time{
+  font-size:13px;
+  color:#94a3b8;
+}
+.shift-site{
+  font-size:16px;
+  font-weight:800;
+}
+.shift-state{
+  font-size:12px;
+  font-weight:800;
+  color:#60a5fa;
+}
+
 </style>
 </head>
 
@@ -767,7 +821,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v5.7 worker-notice-center';
+let APP_VERSION='FlowIQ Crew v5.8 live-shift-board';
   
 const MASTER_PASSWORD="1234";
 const COMPANY_PASSWORDS={
@@ -1056,6 +1110,29 @@ function renderWorkerHome(){
       </div>
     </div>
 
+    <div class="shift-board">
+      <div class="shift-board-header">
+        <div class="title">📅 오늘 스케줄</div>
+        <div class="shift-chip">LIVE</div>
+      </div>
+
+      <div class="shift-row">
+        <div class="shift-left">
+          <div class="shift-site">${job ? job.title : "현장 대기중"}</div>
+          <div class="shift-time">${job ? job.work_time : "-"}</div>
+        </div>
+        <div class="shift-state">${status==="출근완료" ? "근무중" : "대기"}</div>
+      </div>
+
+      <div class="shift-row">
+        <div class="shift-left">
+          <div class="shift-site">현장 이동</div>
+          <div class="shift-time">길찾기 버튼 사용 가능</div>
+        </div>
+        <div class="shift-state">준비완료</div>
+      </div>
+    </div>
+
     <div class="notice-center">
       <div class="title">🔔 실시간 안내</div>
 
@@ -1215,9 +1292,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v5.7";
+      (COMPANY_NAMES[companyId] || companyId) + " · v5.8";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.7";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v5.8";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
