@@ -1408,6 +1408,11 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   display:none !important;
 }
 
+
+.worker-only-hidden{
+  display:none !important;
+}
+
 </style>
 </head>
 
@@ -1605,7 +1610,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v11.2 manager-clean-view';
+let APP_VERSION='FlowIQ Crew v11.3 clean-worker-view';
 let managerFilter='all';
 let managerSearch='';
   
@@ -1858,6 +1863,8 @@ function renderWorkerHome(){
   const panel=document.getElementById("workerHomePanel");
   if(!panel)return;
 
+  const hideWorkerOpsClass = role==="worker" ? "worker-only-hidden" : "";
+
   const app=getMyCurrentApplication();
   const status=(app && app.status ? app.status : "").trim() || (app ? "지원" : "근무가능");
   const meta=getStatusMeta(status);
@@ -1896,7 +1903,7 @@ function renderWorkerHome(){
       </div>
     </div>
 
-    <div class="ai-language-board">
+    <div class="${hideWorkerOpsClass} ai-language-board">
       <div class="title">🧠 AI 실시간 번역 상태</div>
 
       <div class="ai-language-row">
@@ -1953,7 +1960,7 @@ function renderWorkerHome(){
       </div>
     </div>
 
-    <div class="multi-language-board">
+    <div class="${hideWorkerOpsClass} multi-language-board">
       <div class="title">🌐 다국어 지원 상태</div>
 
       <div class="lang-row">
@@ -2006,7 +2013,7 @@ function renderWorkerHome(){
       </div>
     </div>
 
-    <div class="shift-board">
+    <div class="${hideWorkerOpsClass} shift-board">
       <div class="shift-board-header">
         <div class="title">📅 오늘 스케줄</div>
         <div class="shift-chip">LIVE</div>
@@ -2029,7 +2036,7 @@ function renderWorkerHome(){
       </div>
     </div>
 
-    <div class="notice-center">
+    <div class="${hideWorkerOpsClass} notice-center">
       <div class="title">🔔 실시간 안내</div>
 
       <div class="notice-item">
@@ -2050,7 +2057,7 @@ function renderWorkerHome(){
       <div class="info">지원 → 승인 → 길찾기 → QR 출근 → 급여 확인</div>
     </div>
 
-    <div class="v10-worker-ready">
+    <div class="${hideWorkerOpsClass} v10-worker-ready">
       <div class="title">✅ 오늘 사용 준비</div>
 
       <div class="v10-worker-ready-row">
@@ -2069,7 +2076,7 @@ function renderWorkerHome(){
       </div>
     </div>
 
-    <div class="today-site-card">
+    <div class="${hideWorkerOpsClass} today-site-card">
       <div class="sub">집 → 현장 직행</div>
       <div class="title">Direct-to-Site 출근 모델</div>
       <div class="info">🧭 길찾기 → QR/GPS 출근 → 급여 기록까지 연결됩니다.</div>
@@ -2244,9 +2251,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v11.2";
+      (COMPANY_NAMES[companyId] || companyId) + " · v11.3";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v11.2";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v11.3";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -2517,7 +2524,7 @@ async function deleteJob(jobId){
 
       
 <div class="${hideOpsClass} v11-recovery-board">
-  <div class="title">🟢 v11.2 실시간 운영 코어</div>
+  <div class="title">🟢 v11.3 실시간 운영 코어</div>
   <div class="sub">전체 플랫폼 유지 상태에서 v11 운영 안정화를 적용했습니다.</div>
 
   <div class="v11-recovery-grid">
@@ -2545,7 +2552,7 @@ async function deleteJob(jobId){
 
 <div class="${hideOpsClass} v105-field-ready-board">
 
-        <div class="title">✅ v11.2 현장 준비형 운영 빌드</div>
+        <div class="title">✅ v11.3 현장 준비형 운영 빌드</div>
         <div class="sub">공고, 지원, 승인, 길찾기, 출근, 정산 흐름을 실제 현장 테스트 기준으로 정리했습니다.</div>
 
         <div class="v105-field-ready-grid">
@@ -2574,8 +2581,8 @@ async function deleteJob(jobId){
       </div>
 
       <div class="${hideOpsClass} v10-launch-board">
-        <div class="title">🚀 FlowIQ Crew v11.2</div>
-        <div class="sub">v11.2 통합 현장 준비형 빌드입니다. 관리자, 근로자, AI 운영, 지자체 확장 흐름을 하나의 플랫폼으로 정리했습니다.</div>
+        <div class="title">🚀 FlowIQ Crew v11.3</div>
+        <div class="sub">v11.3 통합 현장 준비형 빌드입니다. 관리자, 근로자, AI 운영, 지자체 확장 흐름을 하나의 플랫폼으로 정리했습니다.</div>
 
         <div class="v10-launch-grid">
           <div class="v10-launch-tile">
@@ -2649,7 +2656,7 @@ async function deleteJob(jobId){
       </div>
 
       <div class="${hideOpsClass} integrated-build-board">
-        <div class="title">🧩 v11.2 통합 안정화</div>
+        <div class="title">🧩 v11.3 통합 안정화</div>
         <div class="sub">관리자 · 근로자 · AI · 지자체 확장 흐름을 하나로 정리했습니다.</div>
 
         <div class="integrated-grid">
