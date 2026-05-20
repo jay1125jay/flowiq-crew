@@ -1451,6 +1451,11 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
   scroll-margin-top:16px;
 }
 
+
+.manager-section-hidden{
+  display:none !important;
+}
+
 </style>
 </head>
 
@@ -1535,7 +1540,7 @@ label{display:block;color:#cbd5e1;font-size:13px;font-weight:700}
     <button class="green" onclick="showQR('manager')">▦ 출근 QR</button>
   </div>
 
-  <div class="section">지원/출근 현황</div>
+  <div class="${simpleManagerHideClass} section">지원/출근 현황</div>
   <div id="workersList"></div>
 </section>
 
@@ -1648,7 +1653,7 @@ let jobs=[];
 let applications=[];
 let attendance=[];
 let managerPendingApplications=[];
-let APP_VERSION='FlowIQ Crew v11.5 field-simple-mode';
+let APP_VERSION='FlowIQ Crew v11.6 cleaner-manager-view';
 let managerFilter='all';
 let managerSearch='';
   
@@ -2283,6 +2288,7 @@ async function deleteJob(jobId){
 
   managerPendingApplications=pendingApplications;
   const hideOpsClass = role==="manager" ? "manager-only-hidden" : "";
+  const simpleManagerHideClass = role==="manager" ? "manager-section-hidden" : "";
 
   document.getElementById("mChecked").innerText=filteredAttendance.length;
   document.getElementById("mApplied").innerText=pendingApplications.length;
@@ -2290,9 +2296,9 @@ async function deleteJob(jobId){
 
   if(role==="manager"){
     document.getElementById("managerTitle").innerText=
-      (COMPANY_NAMES[companyId] || companyId) + " · v11.5";
+      (COMPANY_NAMES[companyId] || companyId) + " · v11.6";
   }else{
-    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v11.5";
+    document.getElementById("managerTitle").innerText="FlowIQ MASTER · v11.6";
   }
 
   const pendingRows=pendingApplications.map((a,index)=>{
@@ -2414,7 +2420,7 @@ async function deleteJob(jobId){
       </div>
     </div>
 
-    <div class="manager-todo">
+    <div class="${simpleManagerHideClass} manager-todo">
       <div class="manager-todo-title">📋 오늘 할 일</div>
 
       <div class="todo-row">✅ 지원자 승인 확인</div>
@@ -2563,7 +2569,7 @@ async function deleteJob(jobId){
 
       
 <div class="${hideOpsClass} v11-recovery-board">
-  <div class="title">🟢 v11.5 실시간 운영 코어</div>
+  <div class="title">🟢 v11.6 실시간 운영 코어</div>
   <div class="sub">전체 플랫폼 유지 상태에서 v11 운영 안정화를 적용했습니다.</div>
 
   <div class="v11-recovery-grid">
@@ -2591,7 +2597,7 @@ async function deleteJob(jobId){
 
 <div class="${hideOpsClass} v105-field-ready-board">
 
-        <div class="title">✅ v11.5 현장 준비형 운영 빌드</div>
+        <div class="title">✅ v11.6 현장 준비형 운영 빌드</div>
         <div class="sub">공고, 지원, 승인, 길찾기, 출근, 정산 흐름을 실제 현장 테스트 기준으로 정리했습니다.</div>
 
         <div class="v105-field-ready-grid">
@@ -2620,8 +2626,8 @@ async function deleteJob(jobId){
       </div>
 
       <div class="${hideOpsClass} v10-launch-board">
-        <div class="title">🚀 FlowIQ Crew v11.5</div>
-        <div class="sub">v11.5 통합 현장 준비형 빌드입니다. 관리자, 근로자, AI 운영, 지자체 확장 흐름을 하나의 플랫폼으로 정리했습니다.</div>
+        <div class="title">🚀 FlowIQ Crew v11.6</div>
+        <div class="sub">v11.6 통합 현장 준비형 빌드입니다. 관리자, 근로자, AI 운영, 지자체 확장 흐름을 하나의 플랫폼으로 정리했습니다.</div>
 
         <div class="v10-launch-grid">
           <div class="v10-launch-tile">
@@ -2695,7 +2701,7 @@ async function deleteJob(jobId){
       </div>
 
       <div class="${hideOpsClass} integrated-build-board">
-        <div class="title">🧩 v11.5 통합 안정화</div>
+        <div class="title">🧩 v11.6 통합 안정화</div>
         <div class="sub">관리자 · 근로자 · AI · 지자체 확장 흐름을 하나로 정리했습니다.</div>
 
         <div class="integrated-grid">
@@ -2843,7 +2849,7 @@ async function deleteJob(jobId){
         </div>
       </div>
 
-      <div class="smart-alert-board">
+      <div class="${simpleManagerHideClass} smart-alert-board">
         <div class="title">🧠 스마트 운영 알림</div>
 
         <div class="smart-alert-item">
@@ -2919,8 +2925,10 @@ async function deleteJob(jobId){
       <div class="section" id="createdJobsSection">생성한 공고</div>
       ${jobRows || `<div class="card"><div class="sub">아직 생성한 공고가 없습니다.</div></div>`}
 
-      <div class="section">지원 대기</div>
-      ${pendingRows || `<div class="card"><div class="sub">아직 지원한 근로자가 없습니다.</div></div>`}
+      <div class="${simpleManagerHideClass}">
+        <div class="section">지원 대기</div>
+        ${pendingRows || `<div class="card"><div class="sub">아직 지원한 근로자가 없습니다.</div></div>`}
+      </div>
 
       <div class="section">처리 완료</div>
       ${processedRows || `<div class="card"><div class="sub">아직 승인/거절 처리된 지원자가 없습니다.</div></div>`}
